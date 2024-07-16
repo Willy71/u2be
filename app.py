@@ -6,9 +6,8 @@ from pytube import YouTube
 
 # Configuración de la página
 st.set_page_config(
-    page_title="You2be",
+    page_title="You-2-be",
     page_icon="▶️",
-    layout="wide"
 )
 
 # Definir el nombre del archivo CSV
