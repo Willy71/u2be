@@ -14,6 +14,10 @@ st.set_page_config(
 # Definir el nombre del archivo CSV
 CSV_FILE = 'youtube_videos.csv'
 
+def centrar_texto(texto, tamanho, color):
+    st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
+                unsafe_allow_html=True)
+
 # Crear o actualizar la estructura del archivo CSV si no existe
 def initialize_csv():
     if not os.path.exists(CSV_FILE):
@@ -30,7 +34,7 @@ initialize_csv()
 def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
-        st.text("Agregar Video")
+        centrar_texto("Agregar video", 6, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
         video_url = st.text_input("Ingresa la URL del video de YouTube:")
