@@ -41,7 +41,7 @@ def main():
 
         selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
 
-        st.subheader("")
+        st.title("")
 
         centrar_texto("Agregar video", 5, "white")
 
