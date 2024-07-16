@@ -6,7 +6,7 @@ from pytube import YouTube
 
 # Configuración de la página
 st.set_page_config(
-    page_title="    You-2-be    ",
+    page_title="You 2 be",
     page_icon="▶️",
 )
 
