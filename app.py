@@ -4,6 +4,13 @@ import os
 import re
 from pytube import YouTube
 
+# Colocar nome na pagina, icone e ampliar a tela
+st.set_page_config(
+    page_title="You2be",
+    page_icon="href=".../icons8-youtube-32.png",
+    layout="wide"
+)
+
 # Definir el nombre del archivo CSV
 CSV_FILE = 'youtube_videos.csv'
 
