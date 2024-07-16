@@ -35,7 +35,7 @@ def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
         # Mostrar categorías disponibles
-        centrar_texto("Categorías Disponibles", 5, 'white')
+        centrar_texto("Categorías Disponibles", 4, 'white')
         df = load_videos()
         categories = df['Category'].unique()
 
@@ -43,7 +43,7 @@ def main():
 
         st.title("")
 
-        centrar_texto("Agregar video", 5, "white")
+        centrar_texto("Agregar video", 4, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
         video_url = st.text_input("Ingresa la URL del video de YouTube:")
