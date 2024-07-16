@@ -58,7 +58,7 @@ def main():
                 st.success(f"Video '{row['Title']}' eliminado")
                 st.rerun()
 
-    centrar_texto("Agregar video", 5, "white")
+        centrar_texto("Agregar video", 5, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
         video_url = st.text_input("Ingresa la URL del video de YouTube:")
