@@ -35,11 +35,13 @@ def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
         # Mostrar categorías disponibles
-        st.text("Categorías Disponibles")
+        centrar_texto("Categorías Disponibles", 5, 'white')
         df = load_videos()
         categories = df['Category'].unique()
 
         selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
+
+        st.subheader()
 
         centrar_texto("Agregar video", 5, "white")
 
