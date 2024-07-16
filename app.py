@@ -41,23 +41,6 @@ def main():
 
         selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
 
-    # Reproductor principal de video
-    if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url)
-
-    if selected_category:
-        st.subheader(f"Videos en la categoría: {selected_category}")
-        videos_in_category = df[df['Category'] == selected_category]
-        for idx, row in videos_in_category.iterrows():
-            st.write(f"{row['Title']}")
-            if st.button(f"Reproducir Video", key=f"play_{idx}"):
-                st.session_state.selected_video_url = row['URL']
-                st.rerun()
-            if st.button(f"Eliminar Video", key=f"delete_{idx}"):
-                delete_video(idx)
-                st.success(f"Video '{row['Title']}' eliminado")
-                st.rerun()
-
         centrar_texto("Agregar video", 5, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
@@ -81,6 +64,23 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
+
+    # Reproductor principal de video
+    if 'selected_video_url' in st.session_state:
+        st.video(st.session_state.selected_video_url)
+
+    if selected_category:
+        st.subheader(f"Videos en la categoría: {selected_category}")
+        videos_in_category = df[df['Category'] == selected_category]
+        for idx, row in videos_in_category.iterrows():
+            st.write(f"{row['Title']}")
+            if st.button(f"Reproducir Video", key=f"play_{idx}"):
+                st.session_state.selected_video_url = row['URL']
+                st.rerun()
+            if st.button(f"Eliminar Video", key=f"delete_{idx}"):
+                delete_video(idx)
+                st.success(f"Video '{row['Title']}' eliminado")
+                st.rerun()
 
 def extract_video_id(url):
     """
