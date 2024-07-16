@@ -7,7 +7,7 @@ from pytube import YouTube
 # Colocar nome na pagina, icone e ampliar a tela
 st.set_page_config(
     page_title="You2be",
-    page_icon=":yt:",
+    page_icon="▶️",
     layout="wide"
 )
 
