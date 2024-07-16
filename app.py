@@ -34,7 +34,7 @@ initialize_csv()
 def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
-        centrar_texto("Agregar video", 6, "white")
+        centrar_texto("Agregar video", 5, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
         video_url = st.text_input("Ingresa la URL del video de YouTube:")
@@ -42,6 +42,12 @@ def main():
         # Input de texto para ingresar la categoría
         category = st.text_input("Ingresa la categoría del video:")
 
+        # Mostrar categorías disponibles
+        st.text("Categorías Disponibles")
+        df = load_videos()
+        categories = df['Category'].unique()
+
+        selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
         # Botón para agregar el video
         if st.button("Agregar Video"):
             if video_url and category:
@@ -57,13 +63,6 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
-
-        # Mostrar categorías disponibles
-        st.text("Categorías Disponibles")
-        df = load_videos()
-        categories = df['Category'].unique()
-
-        selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
