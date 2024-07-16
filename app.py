@@ -36,23 +36,27 @@ def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
         # Mostrar categorías disponibles
-        centrar_texto("Videos", 4, 'white')
+        centrar_texto("Categorías Disponibles", 4, 'white')
         df = load_videos()
-        categories = df['Category'].unique()
+        categories = [""] + list(df['Category'].unique())
 
-        selected_category = st.selectbox("Selecciona una categoría para ver los videos:", [""] + list(categories))
+        selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
 
+        # Mostrar videos de la categoría seleccionada en un selectbox
         if selected_category:
             videos_in_category = df[df['Category'] == selected_category]
             video_titles = [""] + list(videos_in_category['Title'])
-            selected_video_title = st.selectbox("Selecciona un video para reproducir:", video_titles)
-            
-            if selected_video_title:
-                selected_video_row = videos_in_category[videos_in_category['Title'] == selected_video_title]
-                if not selected_video_row.empty:
-                    st.session_state.selected_video_url = selected_video_row['URL'].values[0]
-                    st.session_state.selected_video_idx = selected_video_row.index[0]
-                    st.experimental_rerun()
+        else:
+            videos_in_category = pd.DataFrame(columns=['Category', 'URL', 'Title'])
+            video_titles = [""]
+
+        selected_video_title = st.selectbox("Selecciona un video para reproducir:", video_titles)
+
+        if selected_video_title:
+            selected_video_row = videos_in_category[videos_in_category['Title'] == selected_video_title]
+            if not selected_video_row.empty:
+                st.session_state.selected_video_url = selected_video_row['URL'].values[0]
+                st.session_state.selected_video_idx = selected_video_row.index[0]
 
         st.title("")
 
