@@ -42,6 +42,22 @@ def main():
         # Input de texto para ingresar la categoría
         category = st.text_input("Ingresa la categoría del video:")
 
+         # Botón para agregar el video
+        if st.button("Agregar Video"):
+            if video_url and category:
+                video_id = extract_video_id(video_url)
+                if video_id:
+                    video_title = get_video_title(video_url)
+                    if video_title:
+                        add_video(category, video_url, video_title)
+                        st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
+                    else:
+                        st.error("No se pudo obtener el título del video. Verifica la URL.")
+                else:
+                    st.error("Por favor, ingresa una URL de YouTube válida.")
+            else:
+                st.error("Por favor, ingresa una URL y una categoría.")
+
         # Mostrar categorías disponibles
         st.text("Categorías Disponibles")
         df = load_videos()
