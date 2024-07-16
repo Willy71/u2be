@@ -36,14 +36,14 @@ def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
         # Mostrar categorías disponibles
-        centrar_texto("Categorías Disponibles", 4, 'white')
+        centrar_texto("Videos", 4, 'white')
         df = load_videos()
         categories = df['Category'].unique()
 
         selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
 
         if selected_category:
-            st.subheader(f"Videos en la categoría: {selected_category}")
+            #st.subheader(f"Videos en la categoría: {selected_category}")
             videos_in_category = df[df['Category'] == selected_category]
             for idx, row in videos_in_category.iterrows():
                 if st.button(f"{row['Title']}", key=f"play_{idx}"):
