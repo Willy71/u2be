@@ -63,7 +63,7 @@ def main():
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url)
+        st.video(st.session_state.selected_video_url, autoplay=True)
 
         if 'selected_video_idx' in st.session_state:
             selected_idx = st.session_state.selected_video_idx
