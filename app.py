@@ -34,6 +34,7 @@ initialize_csv()
 def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
+        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
         # Mostrar categorías disponibles
         centrar_texto("Videos", 4, 'white')
         df = load_videos()
@@ -103,7 +104,7 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
-
+        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
 def extract_video_id(url):
     """
     Extrae el ID del video de una URL de YouTube.
