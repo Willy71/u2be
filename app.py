@@ -55,6 +55,24 @@ def main():
              
         df_video = df[df["Title"] == slb_2].iloc[0]
 
+        # Reproductor principal de video
+        if 'selected_video_url' not in st.session_state:
+            st.session_state.selected_video_url = df_video['URL']
+
+        st.session_state.selected_video_url = df_video['URL']
+
+    # Reproductor principal de video
+    if 'selected_video_url' in st.session_state:
+        st.video(st.session_state.selected_video_url)
+
+        if 'selected_video_idx' in st.session_state:
+            selected_idx = st.session_state.selected_video_idx
+            if st.button(f"Eliminar Video", key=f"delete_{selected_idx}"):
+                delete_video(selected_idx)
+                st.success("Video eliminado")
+                del st.session_state['selected_video_url']
+                del st.session_state['selected_video_idx']
+                st.experimental_rerun()
 ##############################################################################################################################
 
         st.title("")
