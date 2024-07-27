@@ -76,7 +76,8 @@ def main():
 ##############################################################################################################################
 
         st.title("")
-
+     # Sidebar para agregar videos
+    with st.sidebar:
         centrar_texto("Agregar video", 4, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
