@@ -37,15 +37,20 @@ def main():
         # Mostrar categorías disponibles
         centrar_texto("Videos", 4, 'white')
         df = load_videos()
-        categories = df['Category'].unique()
-
-        selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
+     
+##############################################################################################################################
+        # feature_1 filters
+        df_1 = df["Category"].unique()
+        df_1_1 = sorted(df_1)
+        selected_category = st.sidebar.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
+        # filter out data
+        #categories = df[(df["Category"] == slb_1)]
+##############################################################################################################################
 
         if selected_category:
-            #st.subheader(f"Videos en la categoría: {selected_category}")
             videos_in_category = df[df['Category'] == selected_category]
             for idx, row in videos_in_category.iterrows():
-                if st.button(f"{row['Title']}", key=f"play_{idx}"):
+                if st.selectbox(f"{row['Title']}", key=f"play_{idx}"):
                     st.session_state.selected_video_url = row['URL']
                     st.session_state.selected_video_idx = idx
                     st.experimental_rerun()
