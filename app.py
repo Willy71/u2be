@@ -103,19 +103,6 @@ def main():
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
 
-    # Reproductor principal de video
-    if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url)
-
-        if 'selected_video_idx' in st.session_state:
-            selected_idx = st.session_state.selected_video_idx
-            if st.button(f"Eliminar Video", key=f"delete_{selected_idx}"):
-                delete_video(selected_idx)
-                st.success("Video eliminado")
-                st.session_state.pop('selected_video_url')
-                st.session_state.pop('selected_video_idx')
-                st.experimental_rerun()
-
 def extract_video_id(url):
     """
     Extrae el ID del video de una URL de YouTube.
