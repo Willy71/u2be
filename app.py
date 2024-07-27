@@ -44,14 +44,10 @@ def main():
         if selected_category:
             #st.subheader(f"Videos en la categoría: {selected_category}")
             videos_in_category = df[df['Category'] == selected_category]
-            video_titles = [""] + list(videos_in_category['Title'])
-            selected_video_title = st.selectbox("Selecciona un video para reproducir:", video_titles)
-
-            if selected_video_title:
-                selected_video_row = videos_in_category[videos_in_category['Title'] == selected_video_title]
-                if not selected_video_row.empty:
-                    st.session_state.selected_video_url = selected_video_row['URL'].values[0]
-                    st.session_state.selected_video_idx = selected_video_row.index[0]
+            for idx, row in videos_in_category.iterrows():
+                if st.button(f"{row['Title']}", key=f"play_{idx}"):
+                    st.session_state.selected_video_url = row['URL']
+                    st.session_state.selected_video_idx = idx
                     st.experimental_rerun()
 
         st.title("")
