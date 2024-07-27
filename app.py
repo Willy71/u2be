@@ -58,6 +58,16 @@ def main():
         st.session_state.selected_video_url = df_video['URL']
         st.session_state.selected_video_idx = df.index[df['Title'] == slb_2].tolist()[0]
 
+        # Botón para activar/desactivar la reproducción continua
+        if 'continuous_playback' not in st.session_state:
+            st.session_state.continuous_playback = False
+
+        if st.button("Activar Reproducción Continua"):
+            st.session_state.continuous_playback = not st.session_state.continuous_playback
+
+        if st.session_state.continuous_playback:
+            st.write("Reproducción Continua Activada")
+
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
         st.video(st.session_state.selected_video_url)
@@ -96,17 +106,6 @@ def main():
                 st.error("Por favor, ingresa una URL de YouTube válida.")
         else:
             st.error("Por favor, ingresa una URL y una categoría.")
-
-    # Botón para activar/desactivar la reproducción continua
-    if 'continuous_playback' not in st.session_state:
-        st.session_state.continuous_playback = False
-
-    st.sidebar.write("")
-    if st.sidebar.button("Activar Reproducción Continua"):
-        st.session_state.continuous_playback = not st.session_state.continuous_playback
-
-    if st.session_state.continuous_playback:
-        st.sidebar.write("Reproducción Continua Activada")
 
     # Reproducción continua
     if st.session_state.continuous_playback and 'selected_video_idx' in st.session_state:
