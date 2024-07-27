@@ -18,8 +18,7 @@ df = df.dropna(how="all")  # Remove rows with all NaN values
 def centrar_texto(texto, tamanho, color):
     st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>", unsafe_allow_html=True)
 
-def   
- main():
+def main():
     # Sidebar for adding and selecting videos
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
