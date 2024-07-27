@@ -37,36 +37,29 @@ def main():
         # Mostrar categorías disponibles
         centrar_texto("Videos", 4, 'white')
         df = load_videos()
-
-        # Filtrar por categoría
+     
+##############################################################################################################################
+        # feature_1 filters
         df_1 = df["Category"].unique()
         df_1_1 = sorted(df_1)
         slb_1 = st.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
-        df = df[df["Category"] == slb_1]
-
-        # Filtrar por título de video
+        # filter out data
+        df = df[(df["Category"] == slb_1)]
+        
+        # feature_2 filters
         df_2 = df["Title"].unique()
         df_2_1 = sorted(df_2)
         slb_2 = st.selectbox('Titulo', df_2_1)
+        # filter out data
+        df = df[(df["Title"] == slb_2)]
+             
         df_video = df[df["Title"] == slb_2].iloc[0]
 
-        # Guardar la URL del video seleccionado en el estado de la sesión
+        # Reproductor principal de video
         if 'selected_video_url' not in st.session_state:
             st.session_state.selected_video_url = df_video['URL']
-            st.session_state.selected_video_idx = df.index[df['Title'] == slb_2].tolist()[0]
-        
+
         st.session_state.selected_video_url = df_video['URL']
-        st.session_state.selected_video_idx = df.index[df['Title'] == slb_2].tolist()[0]
-
-        # Botón para activar/desactivar la reproducción continua
-        if 'continuous_playback' not in st.session_state:
-            st.session_state.continuous_playback = False
-
-        if st.button("Activar Reproducción Continua"):
-            st.session_state.continuous_playback = not st.session_state.continuous_playback
-
-        if st.session_state.continuous_playback:
-            st.write("Reproducción Continua Activada")
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
@@ -80,45 +73,35 @@ def main():
                 del st.session_state['selected_video_url']
                 del st.session_state['selected_video_idx']
                 st.experimental_rerun()
+##############################################################################################################################
 
-    st.title("")
-    centrar_texto("Agregar video", 4, "white")
+        st.title("")
+     # Sidebar para agregar videos
+    with st.sidebar:
+        centrar_texto("Agregar video", 4, "white")
 
-    # Input de texto para ingresar la URL del video de YouTube
-    video_url = st.text_input("Ingresa la URL del video de YouTube:")
+        # Input de texto para ingresar la URL del video de YouTube
+        video_url = st.text_input("Ingresa la URL del video de YouTube:")
 
-    # Input de texto para ingresar la categoría
-    category = st.text_input("Ingresa la categoría del video:")
+        # Input de texto para ingresar la categoría
+        category = st.text_input("Ingresa la categoría del video:")
 
-    # Botón para agregar el video
-    if st.button("Agregar Video"):
-        if video_url and category:
-            video_id = extract_video_id(video_url)
-            if video_id:
-                video_title = get_video_title(video_url)
-                if video_title:
-                    add_video(category, video_url, video_title)
-                    st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
-                    st.experimental_rerun()
+        # Botón para agregar el video
+        if st.button("Agregar Video"):
+            if video_url and category:
+                video_id = extract_video_id(video_url)
+                if video_id:
+                    video_title = get_video_title(video_url)
+                    if video_title:
+                        add_video(category, video_url, video_title)
+                        st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
+                        st.experimental_rerun()
+                    else:
+                        st.error("No se pudo obtener el título del video. Verifica la URL.")
                 else:
-                    st.error("No se pudo obtener el título del video. Verifica la URL.")
+                    st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
-                st.error("Por favor, ingresa una URL de YouTube válida.")
-        else:
-            st.error("Por favor, ingresa una URL y una categoría.")
-
-    # Reproducción continua
-    if st.session_state.continuous_playback and 'selected_video_idx' in st.session_state:
-        df = load_videos()
-        df = df[df["Category"] == slb_1]
-        current_index = st.session_state.selected_video_idx
-        next_index = (current_index + 1) % len(df)
-        next_video_url = df.iloc[next_index]['URL']
-
-        # Reproducir el siguiente video automáticamente
-        st.session_state.selected_video_url = next_video_url
-        st.session_state.selected_video_idx = next_index
-        st.experimental_rerun()
+                st.error("Por favor, ingresa una URL y una categoría.")
 
 def extract_video_id(url):
     """
