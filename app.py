@@ -42,17 +42,21 @@ def main():
         # feature_1 filters
         df_1 = df["Category"].unique()
         df_1_1 = sorted(df_1)
-        selected_category = st.sidebar.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
+        slb_1 = st.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
         # filter out data
-        #categories = df[(df["Category"] == slb_1)]
+        df = df[(df["Category"] == slb_1)]
+        
+        # feature_2 filters
+        df_2 = df["Title"].unique()
+        df_2_1 = sorted(df_2)
+        slb_2 = st.selectbox('Titulo', df_2_1)
+        # filter out data
+        df = df[(df["Title"] == slb_2)]
+             
+        df_video = df[df["Title"] == slb_2].iloc[0]
+        
+        centrar_texto(df_video['Title'], 4, "white")
 
-        if selected_category:
-            videos_in_category = df[df['Category'] == selected_category]
-            for idx, row in videos_in_category.iterrows():
-                if st.selectbox(f"{row['Title']}", videos_in_category):
-                    st.session_state.selected_video_url = row['URL']
-                    st.session_state.selected_video_idx = idx
-                    st.experimental_rerun()
 ##############################################################################################################################
 
         st.title("")
