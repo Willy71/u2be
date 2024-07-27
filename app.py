@@ -3,25 +3,15 @@ import pandas as pd
 import os
 import re
 from pytube import YouTube
-from streamlit_gsheets import GSheetsConnection
 
 # Configuración de la página
 st.set_page_config(
     page_title="You 2 be",
     page_icon="▶️",
 )
-#==============================================================================================================
-# Establecer conexion con Google Sheets
-conn = st.experimental_connection("gsheets", type=GSheetsConnection)
-
-# Fetch existing vendors data
-df = conn.read(worksheet="youtube_videos", usecols=list(range(22)), ttl=5)
-df = existing_data.dropna(how="all")
-
-#==============================================================================================================
 
 # Definir el nombre del archivo CSV
-#CSV_FILE = 'youtube_videos.csv'
+CSV_FILE = 'youtube_videos.csv'
 
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
@@ -29,15 +19,15 @@ def centrar_texto(texto, tamanho, color):
                 unsafe_allow_html=True)
 
 # Crear o actualizar la estructura del archivo CSV si no existe
-#def initialize_csv():
-#    if not os.path.exists(CSV_FILE):
-#        df = pd.DataFrame(columns=['Category', 'URL', 'Title'])
-#        df.to_csv(CSV_FILE, index=False)
-#    else:
-#        df = pd.read_csv(CSV_FILE)
-#        if 'Title' not in df.columns:
-#            df['Title'] = ''
-#            df.to_csv(CSV_FILE, index=False)
+def initialize_csv():
+    if not os.path.exists(CSV_FILE):
+        df = pd.DataFrame(columns=['Category', 'URL', 'Title'])
+        df.to_csv(CSV_FILE, index=False)
+    else:
+        df = pd.read_csv(CSV_FILE)
+        if 'Title' not in df.columns:
+            df['Title'] = ''
+            df.to_csv(CSV_FILE, index=False)
 
 initialize_csv()
 
@@ -114,9 +104,7 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
-                
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
-        
 def extract_video_id(url):
     """
     Extrae el ID del video de una URL de YouTube.
@@ -143,18 +131,18 @@ def get_video_title(url):
         return None
 
 def add_video(category, url, title):
+    df = load_videos()
     new_row = pd.DataFrame({'Category': [category], 'URL': [url], 'Title': [title]})
     df = pd.concat([df, new_row], ignore_index=True)
-    conn.update(worksheet="youtube_videos", data=df)
-    st.success("Reserva adicionada com sucesso")
-    
-    #df.to_csv(CSV_FILE, index=False)
+    df.to_csv(CSV_FILE, index=False)
 
+def load_videos():
+    return pd.read_csv(CSV_FILE)
 
-def delete_video(index, df):
+def delete_video(index):
+    df = load_videos()
     df = df.drop(index)
-    conn.update(worksheet="youtube_videos", data=df)
-    st.success("Video apagado com sucesso")
+    df.to_csv(CSV_FILE, index=False)
 
 if __name__ == "__main__":
     main()
