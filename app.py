@@ -143,7 +143,6 @@ def get_video_title(url):
         return None
 
 def add_video(category, url, title):
-    df = load_videos()
     new_row = pd.DataFrame({'Category': [category], 'URL': [url], 'Title': [title]})
     df = pd.concat([df, new_row], ignore_index=True)
     conn.update(worksheet="youtube_videos", data=df)
@@ -151,13 +150,11 @@ def add_video(category, url, title):
     
     #df.to_csv(CSV_FILE, index=False)
 
-def load_videos():
-    return pd.read_csv(CSV_FILE)
 
-def delete_video(index):
-    df = load_videos()
+def delete_video(index, df):
     df = df.drop(index)
-    df.to_csv(CSV_FILE, index=False)
+    conn.update(worksheet="youtube_videos", data=df)
+    st.success("Video apagado com sucesso")
 
 if __name__ == "__main__":
     main()
