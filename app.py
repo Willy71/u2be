@@ -1,115 +1,89 @@
 import streamlit as st
 import pandas as pd
-import re
 from pytube import YouTube
 from streamlit_gsheets import GSheetsConnection
 
-# Configuración de la página
-st.set_page_config(
-    page_title="You 2 be",
-    page_icon="▶️",
-)
+# Configuration of the page
+st.set_page_config(page_title="You 2 be", page_icon="▶️")
 
-# Establecer conexión con Google Sheets
+# Establish connection with Google Sheets
+# (Assuming you have set up the necessary authentication)
 conn = st.experimental_connection("gsheets", type=GSheetsConnection)
 
-# Leer datos existentes de la hoja de Google Sheets
-def load_videos():
-    try:
-        df = conn.read(worksheet="youtube_videos", usecols="A:C", ttl=5)
-        df = df.dropna(how="all")
-        return df
-    except Exception as e:
-        st.error(f"Error al cargar videos: {e}")
-        return pd.DataFrame(columns=['Category', 'URL', 'Title'])
+# Fetch existing vendors data (replace "youtube_videos" with your actual sheet name)
+df = conn.read(worksheet="youtube_videos", usecols=list(range(22)), ttl=5)
+df = df.dropna(how="all")  # Remove rows with all NaN values
 
-df = load_videos()
-
-# Función para centrar el texto
+# Function to center text (optional)
 def centrar_texto(texto, tamanho, color):
-    st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
-                unsafe_allow_html=True)
+    st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>", unsafe_allow_html=True)
 
-def main():
-    # Sidebar para agregar y seleccionar videos
+def   
+ main():
+    # Sidebar for adding and selecting videos
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
-        # Mostrar categorías disponibles
+
+        # Show categories available (modify based on your sheet)
         centrar_texto("Videos", 4, 'white')
+        df_categories = df["Category"].unique()
+        df_categories = sorted(df_categories)
+        selected_category = st.selectbox('Selecciona una categoría para ver los videos:', df_categories)
 
-        if df.empty:
-            st.write("No hay videos disponibles.")
-        else:
-            # feature_1 filters
-            df_1 = df["Category"].unique()
-            df_1_1 = sorted(df_1)
-            slb_1 = st.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
-            # filter out data
-            filtered_df = df[df["Category"] == slb_1]
+        # Filter data by category
+        df = df[df["Category"] == selected_category]
 
-            # feature_2 filters
-            df_2 = filtered_df["Title"].unique()
-            df_2_1 = sorted(df_2)
-            slb_2 = st.selectbox('Titulo', df_2_1)
-            # filter out data
-            selected_video = filtered_df[filtered_df["Title"] == slb_2].iloc[0]
+        # Feature 2 filters (modify as needed)
+        df_titles = df["Title"].unique()
+        df_titles = sorted(df_titles)
+        selected_title = st.selectbox('Titulo', df_titles)
 
-            # Guardar la URL del video seleccionado en el estado de la sesión
-            if 'selected_video_url' not in st.session_state:
-                st.session_state.selected_video_url = selected_video['URL']
-                st.session_state.selected_video_idx = filtered_df.index[filtered_df['Title'] == slb_2].tolist()[0]
+        # Filter data by title
+        df_video = df[df["Title"] == selected_title].iloc[0]
 
-            st.session_state.selected_video_url = selected_video['URL']
-            st.session_state.selected_video_idx = filtered_df.index[filtered_df['Title'] == slb_2].tolist()[0]
+    # Main video player
+    if 'selected_video_url' not in st.session_state:
+        st.session_state.selected_video_url = df_video['URL']
+    st.video(st.session_state.selected_video_url, autoplay=True)
 
-            # Botón para activar/desactivar la reproducción continua
-            if 'continuous_playback' not in st.session_state:
-                st.session_state.continuous_playback = False
+    # Delete video functionality (assuming you have a column for deletion flag)
+    if 'selected_video_idx' in st.session_state:
+        selected_idx = st.session_state.selected_video_idx
+        if st.button(f"Eliminar Video", key=f"delete_{selected_idx}"):
+            # Update data in Google Sheets to mark video for deletion (modify logic as needed)
+            df.loc[selected_idx, 'Delete'] = True  # Assuming a 'Delete' column exists
+            conn.update(worksheet="youtube_videos", data=df)
+            st.success("Video eliminado")
+            del st.session_state['selected_video_url']
+            del st.session_state['selected_video_idx']
+            st.experimental_rerun()
 
-            if st.button("Activar Reproducción Continua"):
-                st.session_state.continuous_playback = not st.session_state.continuous_playback
+    # Sidebar for adding videos
+    with st.sidebar:
+        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
+        centrar_texto("Agregar video", 4, "white")
 
-            if st.session_state.continuous_playback:
-                st.write("Reproducción Continua Activada")
+        # Input for video URL and category
+        video_url = st.text_input("Ingresa la URL del video de YouTube:")
+        # Input de texto para ingresar la categoría
+        category = st.text_input("Ingresa la categoría del video:")
 
-    # Reproductor principal de video
-    if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url, autoplay=True)
-
-        if 'selected_video_idx' in st.session_state:
-            selected_idx = st.session_state.selected_video_idx
-            if st.button(f"Eliminar Video", key=f"delete_{selected_idx}"):
-                delete_video(selected_idx)
-                st.success("Video eliminado")
-                del st.session_state['selected_video_url']
-                del st.session_state['selected_video_idx']
-                st.experimental_rerun()
-
-    st.title("")
-    centrar_texto("Agregar video", 4, "white")
-
-    # Input de texto para ingresar la URL del video de YouTube
-    video_url = st.text_input("Ingresa la URL del video de YouTube:")
-
-    # Input de texto para ingresar la categoría
-    category = st.text_input("Ingresa la categoría del video:")
-
-    # Botón para agregar el video
-    if st.button("Agregar Video"):
-        if video_url and category:
-            video_id = extract_video_id(video_url)
-            if video_id:
-                video_title = get_video_title(video_url)
-                if video_title:
-                    add_video(category, video_url, video_title)
-                    st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
-                    st.experimental_rerun()
+        # Botón para agregar el video
+        if st.button("Agregar Video"):
+            if video_url and category:
+                video_id = extract_video_id(video_url)
+                if video_id:
+                    video_title = get_video_title(video_url)
+                    if video_title:
+                        add_video(category, video_url, video_title)
+                        st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
+                        st.experimental_rerun()
+                    else:
+                        st.error("No se pudo obtener el título del video. Verifica la URL.")
                 else:
-                    st.error("No se pudo obtener el título del video. Verifica la URL.")
+                    st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
-                st.error("Por favor, ingresa una URL de YouTube válida.")
-        else:
-            st.error("Por favor, ingresa una URL y una categoría.")
+                st.error("Por favor, ingresa una URL y una categoría.")
 
     # Reproducción continua
     if st.session_state.continuous_playback and 'selected_video_idx' in st.session_state:
