@@ -75,9 +75,10 @@ def main():
                 st.experimental_rerun()
 ##############################################################################################################################
 
-        st.title("")
-     # Sidebar para agregar videos
+       
+    # Sidebar para agregar videos
     with st.sidebar:
+        st.header("")
         centrar_texto("Agregar video", 4, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
