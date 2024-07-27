@@ -14,8 +14,16 @@ st.set_page_config(
 conn = st.experimental_connection("gsheets", type=GSheetsConnection)
 
 # Leer datos existentes de la hoja de Google Sheets
-df = conn.read(worksheet="youtube_videos", usecols=list(range(3)), ttl=5)
-df = df.dropna(how="all")
+def load_videos():
+    try:
+        df = conn.read(worksheet="youtube_videos", usecols="A:C", ttl=5)
+        df = df.dropna(how="all")
+        return df
+    except Exception as e:
+        st.error(f"Error al cargar videos: {e}")
+        return pd.DataFrame(columns=['Category', 'URL', 'Title'])
+
+df = load_videos()
 
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
@@ -29,37 +37,40 @@ def main():
         # Mostrar categorías disponibles
         centrar_texto("Videos", 4, 'white')
 
-        # feature_1 filters
-        df_1 = df["Category"].unique()
-        df_1_1 = sorted(df_1)
-        slb_1 = st.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
-        # filter out data
-        filtered_df = df[df["Category"] == slb_1]
+        if df.empty:
+            st.write("No hay videos disponibles.")
+        else:
+            # feature_1 filters
+            df_1 = df["Category"].unique()
+            df_1_1 = sorted(df_1)
+            slb_1 = st.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
+            # filter out data
+            filtered_df = df[df["Category"] == slb_1]
 
-        # feature_2 filters
-        df_2 = filtered_df["Title"].unique()
-        df_2_1 = sorted(df_2)
-        slb_2 = st.selectbox('Titulo', df_2_1)
-        # filter out data
-        selected_video = filtered_df[filtered_df["Title"] == slb_2].iloc[0]
+            # feature_2 filters
+            df_2 = filtered_df["Title"].unique()
+            df_2_1 = sorted(df_2)
+            slb_2 = st.selectbox('Titulo', df_2_1)
+            # filter out data
+            selected_video = filtered_df[filtered_df["Title"] == slb_2].iloc[0]
 
-        # Guardar la URL del video seleccionado en el estado de la sesión
-        if 'selected_video_url' not in st.session_state:
+            # Guardar la URL del video seleccionado en el estado de la sesión
+            if 'selected_video_url' not in st.session_state:
+                st.session_state.selected_video_url = selected_video['URL']
+                st.session_state.selected_video_idx = filtered_df.index[filtered_df['Title'] == slb_2].tolist()[0]
+
             st.session_state.selected_video_url = selected_video['URL']
             st.session_state.selected_video_idx = filtered_df.index[filtered_df['Title'] == slb_2].tolist()[0]
 
-        st.session_state.selected_video_url = selected_video['URL']
-        st.session_state.selected_video_idx = filtered_df.index[filtered_df['Title'] == slb_2].tolist()[0]
+            # Botón para activar/desactivar la reproducción continua
+            if 'continuous_playback' not in st.session_state:
+                st.session_state.continuous_playback = False
 
-        # Botón para activar/desactivar la reproducción continua
-        if 'continuous_playback' not in st.session_state:
-            st.session_state.continuous_playback = False
+            if st.button("Activar Reproducción Continua"):
+                st.session_state.continuous_playback = not st.session_state.continuous_playback
 
-        if st.button("Activar Reproducción Continua"):
-            st.session_state.continuous_playback = not st.session_state.continuous_playback
-
-        if st.session_state.continuous_playback:
-            st.write("Reproducción Continua Activada")
+            if st.session_state.continuous_playback:
+                st.write("Reproducción Continua Activada")
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
@@ -102,11 +113,10 @@ def main():
 
     # Reproducción continua
     if st.session_state.continuous_playback and 'selected_video_idx' in st.session_state:
-        df = load_videos()
-        df = df[df["Category"] == slb_1]
+        filtered_df = df[df["Category"] == slb_1]
         current_index = st.session_state.selected_video_idx
-        next_index = (current_index + 1) % len(df)
-        next_video_url = df.iloc[next_index]['URL']
+        next_index = (current_index + 1) % len(filtered_df)
+        next_video_url = filtered_df.iloc[next_index]['URL']
 
         # Reproducir el siguiente video automáticamente
         st.session_state.selected_video_url = next_video_url
@@ -139,13 +149,11 @@ def get_video_title(url):
         return None
 
 def add_video(category, url, title):
+    df = load_videos()
     new_row = pd.DataFrame({'Category': [category], 'URL': [url], 'Title': [title]})
     df = pd.concat([df, new_row], ignore_index=True)
     conn.update(worksheet="youtube_videos", data=df)
     st.success("Video agregado con éxito")
-
-def load_videos():
-    return df
 
 def delete_video(index):
     df = load_videos()
