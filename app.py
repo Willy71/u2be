@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
+import os
+import re
+from pytube import YouTube
 
 # Configuración de la página
 st.set_page_config(
@@ -11,7 +14,7 @@ st.set_page_config(
 
 # Configuración de la conexión a Google Sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-SERVICE_ACCOUNT_FILE = "credentials.json"  # Reemplaza con la ruta a tu archivo de credenciales
+SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname(__file__), 'credentials.json')  # Ruta al archivo de credenciales
 
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 gc = gspread.authorize(credentials)
@@ -23,6 +26,8 @@ try:
     sheet = gc.open_by_key(SPREADSHEET_KEY).sheet1
 except gspread.exceptions.SpreadsheetNotFound:
     st.error(f"No se encontró la hoja de cálculo con la clave '{SPREADSHEET_KEY}'. Asegúrate de que la clave es correcta y que has compartido la hoja con el correo electrónico del cliente de servicio.")
+except Exception as e:
+    st.error(f"Error al abrir la hoja de cálculo: {e}")
 
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
@@ -143,5 +148,3 @@ def get_video_title(url):
 
 if __name__ == "__main__":
     main()
-
-
