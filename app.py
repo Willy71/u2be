@@ -69,7 +69,7 @@ def main():
                     if video_title:
                         add_video(category, video_url, video_title)
                         st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
-                        st.experimental_rerun()
+                        st.rerun()
                     else:
                         st.error("No se pudo obtener el título del video. Verifica la URL.")
                 else:
@@ -88,7 +88,7 @@ def main():
                 st.success("Video eliminado")
                 st.session_state.pop('selected_video_url')
                 st.session_state.pop('selected_video_idx')
-                st.experimental_rerun()
+                st.rerun()
 
 def extract_video_id(url):
     """
