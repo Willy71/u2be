@@ -11,7 +11,7 @@ st.set_page_config(
 
 # Configuración de la conexión a Google Sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-SERVICE_ACCOUNT_FILE = "C:/Users/guill/OneDrive/Documentos/python_projects/Youtube ST/credentials.json"  # Reemplaza con la ruta a tu archivo de credenciales
+SERVICE_ACCOUNT_FILE = "credentials.json"  # Reemplaza con la ruta a tu archivo de credenciales
 
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 gc = gspread.authorize(credentials)
