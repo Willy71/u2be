@@ -14,7 +14,7 @@ st.set_page_config(
 
 # Configuración de la conexión a Google Sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname("credentials.json"))  # Ruta al archivo de credenciales
+SERVICE_ACCOUNT_FILE = os.path.join('credentials.json')  # Ruta al archivo de credenciales
 
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 gc = gspread.authorize(credentials)
