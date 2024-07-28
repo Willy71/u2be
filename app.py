@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import gspread
-from google.oauth2.service_account import Credentials
 import os
 import re
 from pytube import YouTube
@@ -12,94 +10,48 @@ st.set_page_config(
     page_icon="▶️",
 )
 
-# Configuración de la conexión a Google Sheets
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-# Obtener la ruta absoluta del archivo de credenciales
-SERVICE_ACCOUNT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'credentials.json'))
-
-# Verificar si el archivo de credenciales existe
-if not os.path.exists(SERVICE_ACCOUNT_FILE):
-    st.error("El archivo 'credentials.json' no se encuentra en la ruta especificada.")
-else:
-    credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    gc = gspread.authorize(credentials)
-
-    # Abre la hoja de cálculo usando la clave del documento
-    SPREADSHEET_KEY = "1WXqOfW6Fd8qaY5gDfTw0kuiqasTKEhFZ2k13aQAVvVw"  # Reemplaza con la clave de tu documento
-
-    try:
-        sheet = gc.open_by_key(SPREADSHEET_KEY).sheet1
-    except gspread.exceptions.SpreadsheetNotFound:
-        st.error(f"No se encontró la hoja de cálculo con la clave '{SPREADSHEET_KEY}'. Asegúrate de que la clave es correcta y que has compartido la hoja con el correo electrónico del cliente de servicio.")
-    except Exception as e:
-        st.error(f"Error al abrir la hoja de cálculo: {e}")
+# Definir el nombre del archivo CSV
+CSV_FILE = 'youtube_videos.csv'
 
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
     st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
                 unsafe_allow_html=True)
 
-# Cargar los videos desde Google Sheets
-def load_videos():
-    rows = sheet.get_all_records()
-    df = pd.DataFrame(rows)
-    return df
+# Crear o actualizar la estructura del archivo CSV si no existe
+def initialize_csv():
+    if not os.path.exists(CSV_FILE):
+        df = pd.DataFrame(columns=['Category', 'URL', 'Title'])
+        df.to_csv(CSV_FILE, index=False)
+    else:
+        df = pd.read_csv(CSV_FILE)
+        if 'Title' not in df.columns:
+            df['Title'] = ''
+            df.to_csv(CSV_FILE, index=False)
 
-# Agregar un video a Google Sheets
-def add_video(category, url, title):
-    new_row = {'Category': category, 'URL': url, 'Title': title}
-    sheet.append_row(list(new_row.values()))
-
-# Eliminar un video de Google Sheets
-def delete_video(index):
-    sheet.delete_row(index + 2)  # +2 porque Google Sheets es 1-indexed y hay una fila de encabezado
+initialize_csv()
 
 def main():
     # Sidebar para agregar y seleccionar videos
     with st.sidebar:
-        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
         # Mostrar categorías disponibles
         centrar_texto("Videos", 4, 'white')
         df = load_videos()
-        
-        # Feature 1 filters
-        df_1 = df["Category"].unique()
-        df_1_1 = sorted(df_1)
-        slb_1 = st.selectbox('Selecciona una categoría para ver los videos:', df_1_1)
-        # Filter out data
-        df = df[(df["Category"] == slb_1)]
-        
-        # Feature 2 filters
-        df_2 = df["Title"].unique()
-        df_2_1 = sorted(df_2)
-        slb_2 = st.selectbox('Titulo', df_2_1)
-        # Filter out data
-        df = df[(df["Title"] == slb_2)]
-             
-        df_video = df[df["Title"] == slb_2].iloc[0]
+        categories = df['Category'].unique()
 
-        # Reproductor principal de video
-        if 'selected_video_url' not in st.session_state:
-            st.session_state.selected_video_url = df_video['URL']
+        selected_category = st.selectbox("Selecciona una categoría para ver los videos:", categories)
 
-        st.session_state.selected_video_url = df_video['URL']
+        if selected_category:
+            #st.subheader(f"Videos en la categoría: {selected_category}")
+            videos_in_category = df[df['Category'] == selected_category]
+            for idx, row in videos_in_category.iterrows():
+                if st.button(f"{row['Title']}", key=f"play_{idx}"):
+                    st.session_state.selected_video_url = row['URL']
+                    st.session_state.selected_video_idx = idx
+                    st.experimental_rerun()
 
-    # Reproductor principal de video
-    if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url, autoplay=True)
+        st.title("")
 
-        if 'selected_video_idx' in st.session_state:
-            selected_idx = st.session_state.selected_video_idx
-            if st.button(f"Eliminar Video", key=f"delete_{selected_idx}"):
-                delete_video(selected_idx)
-                st.success("Video eliminado")
-                del st.session_state['selected_video_url']
-                del st.session_state['selected_video_idx']
-                st.experimental_rerun()
-       
-    # Sidebar para agregar videos
-    with st.sidebar:
-        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
         centrar_texto("Agregar video", 4, "white")
 
         # Input de texto para ingresar la URL del video de YouTube
@@ -124,7 +76,19 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
-        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
+
+    # Reproductor principal de video
+    if 'selected_video_url' in st.session_state:
+        st.video(st.session_state.selected_video_url)
+
+        if 'selected_video_idx' in st.session_state:
+            selected_idx = st.session_state.selected_video_idx
+            if st.button(f"Eliminar Video", key=f"delete_{selected_idx}"):
+                delete_video(selected_idx)
+                st.success("Video eliminado")
+                st.session_state.pop('selected_video_url')
+                st.session_state.pop('selected_video_idx')
+                st.experimental_rerun()
 
 def extract_video_id(url):
     """
@@ -150,6 +114,20 @@ def get_video_title(url):
     except Exception as e:
         st.error(f"Error al obtener el título del video: {e}")
         return None
+
+def add_video(category, url, title):
+    df = load_videos()
+    new_row = pd.DataFrame({'Category': [category], 'URL': [url], 'Title': [title]})
+    df = pd.concat([df, new_row], ignore_index=True)
+    df.to_csv(CSV_FILE, index=False)
+
+def load_videos():
+    return pd.read_csv(CSV_FILE)
+
+def delete_video(index):
+    df = load_videos()
+    df = df.drop(index)
+    df.to_csv(CSV_FILE, index=False)
 
 if __name__ == "__main__":
     main()
