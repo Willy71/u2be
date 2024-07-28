@@ -14,20 +14,25 @@ st.set_page_config(
 
 # Configuración de la conexión a Google Sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-SERVICE_ACCOUNT_FILE = os.path.join('credentials.json')  # Ruta al archivo de credenciales
+# Obtener la ruta absoluta del archivo de credenciales
+SERVICE_ACCOUNT_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), 'credentials.json'))
 
-credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-gc = gspread.authorize(credentials)
+# Verificar si el archivo de credenciales existe
+if not os.path.exists(SERVICE_ACCOUNT_FILE):
+    st.error("El archivo 'credentials.json' no se encuentra en la ruta especificada.")
+else:
+    credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    gc = gspread.authorize(credentials)
 
-# Abre la hoja de cálculo usando la clave del documento
-SPREADSHEET_KEY = "1WXqOfW6Fd8qaY5gDfTw0kuiqasTKEhFZ2k13aQAVvVw"  # Reemplaza con la clave de tu documento
+    # Abre la hoja de cálculo usando la clave del documento
+    SPREADSHEET_KEY = "1WXqOfW6Fd8qaY5gDfTw0kuiqasTKEhFZ2k13aQAVvVw"  # Reemplaza con la clave de tu documento
 
-try:
-    sheet = gc.open_by_key(SPREADSHEET_KEY).sheet1
-except gspread.exceptions.SpreadsheetNotFound:
-    st.error(f"No se encontró la hoja de cálculo con la clave '{SPREADSHEET_KEY}'. Asegúrate de que la clave es correcta y que has compartido la hoja con el correo electrónico del cliente de servicio.")
-except Exception as e:
-    st.error(f"Error al abrir la hoja de cálculo: {e}")
+    try:
+        sheet = gc.open_by_key(SPREADSHEET_KEY).sheet1
+    except gspread.exceptions.SpreadsheetNotFound:
+        st.error(f"No se encontró la hoja de cálculo con la clave '{SPREADSHEET_KEY}'. Asegúrate de que la clave es correcta y que has compartido la hoja con el correo electrónico del cliente de servicio.")
+    except Exception as e:
+        st.error(f"Error al abrir la hoja de cálculo: {e}")
 
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
