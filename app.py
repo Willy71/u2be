@@ -48,7 +48,7 @@ def main():
                 if st.button(f"{row['Title']}", key=f"play_{idx}"):
                     st.session_state.selected_video_url = row['URL']
                     st.session_state.selected_video_idx = idx
-                    st.experimental_rerun()
+                    st.rerun()
 
         st.title("")
 
