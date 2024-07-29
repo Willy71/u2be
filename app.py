@@ -44,7 +44,7 @@ def centrar_texto(texto, tamanho, color):
                 unsafe_allow_html=True)
 
 # Cargar los videos desde Google Sheets
-@st.cache_data
+#@st.cache_data
 def load_videos():
     rows = sheet.get_all_records()
     df = pd.DataFrame(rows)
