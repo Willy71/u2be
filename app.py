@@ -121,7 +121,7 @@ def main():
         col01, col02, col03 = st.columns(3)
         with col03:
             if st.button("Siguiente", use_container_width=True):
-                st.switch_page("pages/01_Busqueda.py")
+                st.switch_page("paginas/Busqueda.py")
             
 #==========================================================================================================================================
     
