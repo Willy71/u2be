@@ -1,1 +1,4 @@
+gspread 
+oauth2client
 pytube
+numpy==1.26.4
