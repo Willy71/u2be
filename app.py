@@ -141,15 +141,18 @@ def main():
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
             if st.session_state.selected_video_url:
-                if st.button("Eliminar Video"):
-                    delete_video(st.session_state.selected_video_url)
-                    st.success("Video eliminado")
-                    if 'selected_video_url' in st.session_state:
-                        del st.session_state['selected_video_url']
-                    st.rerun()
-                            
-        if st.button("Siguiente", use_container_width=True):
-            st.switch_page("pages/01_busqueda.py")
+                with st.container():
+                    col15, col16, col17, col18, col19 = st.columns(5)
+                    with col15:         
+                        if st.button("Eliminar Video"):
+                            delete_video(st.session_state.selected_video_url)
+                            st.success("Video eliminado")
+                            if 'selected_video_url' in st.session_state:
+                                del st.session_state['selected_video_url']
+                            st.rerun()
+                     with col19:               
+                        if st.button("Siguiente", use_container_width=True):
+                            st.switch_page("pages/01_busqueda.py")
     
 #=========================================================================================================================================
 def extract_video_id(url):  
