@@ -14,15 +14,11 @@ st.set_page_config(
 #=============================================================================================================================
 # Conexion via gspread a traves de https://console.cloud.google.com/ y Google sheets
 
-# Ruta al archivo de credenciales
-# Leer las credenciales desde secrets
-SERVICE_ACCOUNT_FILE = st.secrets["gsheet"]
-
 # Scopes necesarios
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 # Cargar credenciales y autorizar
-credentials = Credentials.from_service_account_info(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+credentials = Credentials.from_service_account_info(st.secrets["gsheet"], scopes=SCOPES)
 gc = gspread.authorize(credentials)
 
 # Clave de la hoja de cálculo (la parte de la URL después de "/d/" y antes de "/edit")
