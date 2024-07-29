@@ -135,7 +135,7 @@ def main():
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
 
-@st.cache_data
+#@st.cache_data
 def extract_video_id(url):  
     # Extrae el ID del video de una URL de YouTube.
     regex = (
