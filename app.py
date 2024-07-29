@@ -80,7 +80,6 @@ def main():
         slb_1 = st.selectbox('Categoria', df_1_1)
         # Filter out data
         df = df[(df["Category"] == slb_1)]
-        st.rerun()
         
         # Feature 2 filters
         df_2 = df["Title"].unique()
