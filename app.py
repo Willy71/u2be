@@ -9,6 +9,7 @@ from pytube import YouTube
 st.set_page_config(
     page_title="You 2 be",
     page_icon="▶️",
+    initial_sidebar_state="collapsed"
 )
 
 #=============================================================================================================================
