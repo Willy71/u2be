@@ -103,8 +103,8 @@ def main():
             st.session_state.selected_video_url = df_video['Url']
 
         st.session_state.selected_video_url = df_video['Url']
-
-    # Reproductor principal de video
+#==========================================================================================================================================
+    # Pagina principal - Reproductor principal de video
     if 'selected_video_url' in st.session_state:
         st.video(st.session_state.selected_video_url, autoplay=False)
 
@@ -115,7 +115,16 @@ def main():
                 if 'selected_video_url' in st.session_state:
                     del st.session_state['selected_video_url']
                 st.rerun()
-       
+
+
+    with st.container():
+    col01, col02, col03 = st.columns(3)
+    with col03:
+        if st.button("Siguiente", use_container_width=True):
+            st.switch_page("pages/02_Backlog.py")
+            
+#==========================================================================================================================================
+    
     # Sidebar para agregar videos
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
@@ -163,12 +172,6 @@ def get_video_title(url):
     except Exception as e:
         st.error(f"Error al obtener el título del video: {e}")
         return None
-
-with st.container():
-    col01, col02, col03 = st.columns(3)
-    with col01:
-        if st.button("Anterior", use_container_width=True):
-            st.switch_page("Home.py")
 
 if __name__ == "__main__":
     main()
