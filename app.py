@@ -142,7 +142,7 @@ def main():
             st.video(st.session_state.selected_video_url, autoplay=False)
             if st.session_state.selected_video_url:
                 with st.container():
-                    col15, col16, col17, col18, col19 = st.columns(5)
+                    col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
                     with col15:         
                         if st.button("Eliminar Video"):
                             delete_video(st.session_state.selected_video_url)
