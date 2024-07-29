@@ -54,6 +54,7 @@ def load_videos():
 def add_video(category, url, title):
     new_row = {'Category': category, 'URL': url, 'Title': title}
     sheet.append_row(list(new_row.values()))
+    st.rerun()
 
 # Eliminar un video de Google Sheets
 #def delete_video(index):
