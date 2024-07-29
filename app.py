@@ -144,37 +144,16 @@ def main():
                 with st.container():
                     col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
                     with col15:         
-                        #if st.button("Eliminar Video"):
-                        #    delete_video(st.session_state.selected_video_url)
-                        #    st.success("Video eliminado")
-                        #    if 'selected_video_url' in st.session_state:
-                        #        del st.session_state['selected_video_url']
-                        #    st.rerun()
-                    #with col19:               
-                        #if st.button("Siguiente", use_container_width=True):
-                        #    st.switch_page("pages/01_busqueda.py")
-
-        #==================================================================================
                         if st.button("Eliminar Video"):
-                            st.session_state.confirm_delete = True
-            
-                        if st.session_state.confirm_delete:
-                            st.write("¿Estás seguro de que deseas eliminar este video?")
-                            if st.button("Confirmar eliminación"):
-                                delete_video(st.session_state.selected_video_url)
-                                st.success("Video eliminado")
-                                if 'selected_video_url' in st.session_state:
-                                    del st.session_state['selected_video_url']
-                                st.session_state.confirm_delete = False
-                                st.rerun()
-                            if st.button("Cancelar"):
-                                st.session_state.confirm_delete = False
-                                st.rerun()
+                            delete_video(st.session_state.selected_video_url)
+                            st.success("Video eliminado")
+                            if 'selected_video_url' in st.session_state:
+                                del st.session_state['selected_video_url']
+                            st.rerun()
                     with col19:               
                         if st.button("Siguiente", use_container_width=True):
                             st.switch_page("pages/01_busqueda.py")
-        #==================================================================================
-    
+ 
 #=========================================================================================================================================
 def extract_video_id(url):  
     # Extrae el ID del video de una URL de YouTube.
