@@ -75,7 +75,7 @@ def main():
         col11, col12, col13 = st.columns([2.5, 0.5, 9])
         with col11:
             # Mostrar categorías disponibles
-            centrar_texto("Videos", 2, 'white')
+            centrar_texto("Videos", 4, 'white')
             df = load_videos()
             
             # Feature 1 filters
@@ -111,7 +111,7 @@ def main():
     #==========================================================================================================================================
                
             st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
-            centrar_texto("Agregar video", 2, "white")
+            centrar_texto("Agregar video", 4, "white")
     
             # Input de texto para ingresar la URL del video de YouTube
             video_url = st.text_input("URL del video de YouTube:")
