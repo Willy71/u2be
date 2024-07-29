@@ -72,7 +72,7 @@ def delete_video(url):
 
 def main():
     with st.container():
-        col11, col12, col13 = st.columns([2, 0.5, 5])
+        col11, col12, col13 = st.columns([1.7, 0.8, 4.5])
         with col11:
             # Mostrar categorías disponibles
             centrar_texto("Videos", 4, 'white')
@@ -84,7 +84,7 @@ def main():
             slb_1 = st.selectbox('Categoria', df_1_1, key='category_selectbox')
             
             # Botón para actualizar la lista de títulos
-            if st.button("Actualizar títulos", key='update_titles_button'):
+            if st.button("Actualizar títulos", key='update_titles_button', use_container_width=True):
                 st.session_state['category_selected'] = slb_1
     
             # Filtro por categoría seleccionada
