@@ -37,14 +37,13 @@ except gspread.exceptions.APIError as e:
     st.error(f"Error de API al intentar acceder a la hoja de cálculo: {e}")
 except Exception as e:
     st.error(f"Ha ocurrido un error inesperado: {e}")
-    
+
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
     st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
                 unsafe_allow_html=True)
 
 # Cargar los videos desde Google Sheets
-#@st.cache_data
 def load_videos():
     rows = sheet.get_all_records()
     df = pd.DataFrame(rows)
@@ -56,18 +55,13 @@ def add_video(category, url, title):
     sheet.append_row(list(new_row.values()))
 
 # Eliminar un video de Google Sheets
-#def delete_video(index):
-#    sheet.delete_row(index + 2)  
-# # +2 porque Google Sheets es 1-indexed y hay una fila de encabezado
-
-# Eliminar un video de Google Sheets
 def delete_video(url):
     try:
         cell = sheet.find(url)
         st.write(f"Buscando URL: {url}")
         if cell:
             st.write(f"Encontrado en la fila: {cell.row}")
-            sheet.delete_rows(cell.row)
+            sheet.delete_rows(cell.row)  # Cambiado a delete_rows
             st.write("Fila eliminada")
         else:
             st.write("URL no encontrado en la hoja de cálculo")
@@ -84,24 +78,31 @@ def main():
         # Feature 1 filters
         df_1 = df["Category"].unique()
         df_1_1 = sorted(df_1)
-        slb_1 = st.selectbox('Categoria', df_1_1)
-        # Filter out data
-        df = df[(df["Category"] == slb_1)]
+        slb_1 = st.selectbox('Categoria', df_1_1, key='category_selectbox')
+        
+        # Botón para actualizar la lista de títulos
+        if st.button("Actualizar títulos", key='update_titles_button'):
+            st.session_state['category_selected'] = slb_1
+
+        # Filtro por categoría seleccionada
+        if 'category_selected' in st.session_state:
+            df = df[df["Category"] == st.session_state['category_selected']]
+        else:
+            df = df[df["Category"] == slb_1]
         
         # Feature 2 filters
         df_2 = df["Title"].unique()
         df_2_1 = sorted(df_2)
-        slb_2 = st.selectbox('Titulo', df_2_1)
-        # Filter out data
-        df = df[(df["Title"] == slb_2)]
-             
+        slb_2 = st.selectbox('Titulo', df_2_1, key='title_selectbox')
+        
+        # Filtro por título seleccionado
         df_video = df[df["Title"] == slb_2].iloc[0]
 
         # Reproductor principal de video
         if 'selected_video_url' not in st.session_state:
-            st.session_state.selected_video_url = df_video['Url']
+            st.session_state.selected_video_url = df_video['URL']
 
-        st.session_state.selected_video_url = df_video['Url']
+        st.session_state.selected_video_url = df_video['URL']
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
@@ -114,7 +115,6 @@ def main():
                 if 'selected_video_url' in st.session_state:
                     del st.session_state['selected_video_url']
                 st.rerun()
-
        
     # Sidebar para agregar videos
     with st.sidebar:
@@ -136,7 +136,6 @@ def main():
                     if video_title:
                         add_video(category, video_url, video_title)
                         st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
-                        st.rerun()
                     else:
                         st.error("No se pudo obtener el título del video. Verifica la URL.")
                 else:
@@ -144,7 +143,6 @@ def main():
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
 
-#@st.cache_data
 def extract_video_id(url):  
     # Extrae el ID del video de una URL de YouTube.
     regex = (
