@@ -14,11 +14,26 @@ st.set_page_config(
 #=============================================================================================================================
 # Conexion via gspread a traves de https://console.cloud.google.com/ y Google sheets
 
+# Credenciales de Google como un diccionario
+SERVICE_ACCOUNT_INFO = {
+  "type": "service_account",
+  "project_id": "estacionamentosantarita",
+  "private_key_id": "be360b61325e9a7647fb666ba8022492a4fb10ab",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDPLbzTqxWlCH9l\nc5iBrzg7/JRlozvBMSqX9C17rM1PQJUdsX5EJVg+2jaj0d/xBWN0SWDOm5izliLk\nC3dw3irpEke4VNeOuJvttGVRjxUOza8H1HbQdZYd2HyG9xmocOc21B/Br8xtS5HX\nbEh1aXfIKyvWGUPjdMOGMyJv2lc2axLDiY2TymHa713scB9O52z2bl+0QPzCxYmm\nHurfP9sP3DEfU8DBaV6VFxMKbZCIbJvDBaJKvxnya8FnrXuPUTfqYhk+Ae6mYhb5\nGnNK1VblJwIhdUlfVBwXaEvCHPdpCcxvZoVKPtIzUy38Wkp+RbVCpbaDE3cCUQ8c\nqAHnBkKFAgMBAAECggEAEkXgjMzFeAzDuI3iN07Eh3a6G5LMbB6eUp1JpUny9WWa\nIVUGPXo+8JNsVIIBne9ebvAjFsxeqTkTP7wKxb/N1uImK3BnbyICNfKxj88UybCQ\nTc3KYvPg3YxtqbVbcOG9MVB/sorpkJqkznRkmawUazYl9vHu7Ndfs9NVWyDNwDG3\nayIk/vRf/4m0n9Pox4v7a3whSSKgXqcXwtzDLOBNCkQJXqwoPHHrG+hLPm22+Dq2\nQOBX/H50ZUkmJ0qLLUHNk62M/+pFzO2NlRAJzxBY/IJwFB3S9Tb6cK5nS4c5YTPz\nVSa4kfbpLInK24a1Q5lx/BME5PEKHxZoSwE4ZRQWKwKBgQDopUtMN1m49c78iRXx\nIHglUCGABFT8yf46GQZNakSZ0n33gvDCnoWXyrbv2RYBNBHLC3gc0knZXicgyeTA\n7eglfqrq0zgfEHAYUOj+iGyxOYC00Blvmm1fN6bNpLC4s48jMVb+BoSpaIU4StNQ\nCG6aI/PDIgFQXhbzVvAamZQeEwKBgQDj+fkAFID4A/7MWPFpWkJ89N/ePrPcGD9B\nnHVv93gkksZXScG3XimyVAKlm5CoESlIsdb5qxGl8K2dm312Xmu253XeycZYyoEc\ntLnTXRngyduODBm89lfetk8Q28ularXPoamtb/V0kB+6whRP0kUHxPri22BKYGgt\nl+tQP47QBwKBgH2xUI1NGlyj8cDfD8vHDyKZuH/B12j8eS5Kdu08jPPOleA0DoAX\nxXXNQCk10H219CcPe0WXF+8ov1snuT/DSbl4Rj+4/olKCEYa8McUTiUyPCd0h0mU\n1aKsHqLcZ95ipOMOtUFppCMjJVbUlnaXF6qP4hN7O9p/+0Zdoju83hmhAoGBAIhG\n/VnW5+FaQg3VfToFAom/t7MauFlxBR8rb+gmfmMeegHjzTDX0QUQwyRMAgT1fUA/\nTsqgQER5ws7cC/ueJbWIVyV+aFrbcqK+RfbbSITfJaecBCa4+33ebRUeznVrfJNJ\niCxtKMUtAkqZiZrNjwY98dt6V+0eBCh9D+VAmRYxAoGAJG2a9nJYC6T3zdJR77PP\naFsynYME5lQB3EvXICWAix5OWiSU1UxtbhmN0FleZq7TGQSgLhY5oj4LImXl71Qy\nboeVrIXuMS8RxMf8tkMd7jk5kTJfVoX907LJxYzRRPjKLVbHHyIRym3g1iILZhxz\nf5s5cGDrP+lO/CGB6Tzt4Vs=\n-----END PRIVATE KEY-----\n",
+  "client_email": "you2be-conection@estacionamentosantarita.iam.gserviceaccount.com",
+  "client_id": "108032461240752891545",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/you2be-conection%40estacionamentosantarita.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+
 # Scopes necesarios
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 # Cargar credenciales y autorizar
-credentials = Credentials.from_service_account_info(st.secrets["gsheet"], scopes=SCOPES)
+credentials = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
 gc = gspread.authorize(credentials)
 
 # Clave de la hoja de cálculo (la parte de la URL después de "/d/" y antes de "/edit")
