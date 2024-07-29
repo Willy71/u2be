@@ -150,7 +150,7 @@ def main():
                             if 'selected_video_url' in st.session_state:
                                 del st.session_state['selected_video_url']
                             st.rerun()
-                     with col19:               
+                    with col19:               
                         if st.button("Siguiente", use_container_width=True):
                             st.switch_page("pages/01_busqueda.py")
     
