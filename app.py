@@ -137,6 +137,7 @@ def main():
 #==========================================================================================================================================
     with col13:
         # Pagina principal - Reproductor principal de video
+        centrar_texto("You2be", 1, "white")
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
     
