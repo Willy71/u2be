@@ -72,7 +72,7 @@ def delete_video(url):
 
 def main():
     with st.container():
-        col11, col12, col13 = st.columns([4, 1, 8])
+        col11, col12, col13 = st.columns([3, 0.5, 8])
         with col11:
             # Mostrar categorías disponibles
             centrar_texto("Videos", 2, 'white')
