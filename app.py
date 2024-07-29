@@ -70,7 +70,7 @@ def delete_video(url):
         st.error(f"Error al intentar eliminar el video: {e}")
 
 def main():
-    # Sidebar para agregar y seleccionar videos
+    # Sidebar para seleccionar videos
     with st.sidebar:
         # Mostrar categorías disponibles
         centrar_texto("Videos", 2, 'white')
@@ -104,28 +104,10 @@ def main():
             st.session_state.selected_video_url = df_video['Url']
 
         st.session_state.selected_video_url = df_video['Url']
+
+                    
 #==========================================================================================================================================
-    # Pagina principal - Reproductor principal de video
-    if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url, autoplay=False)
-
-        if st.session_state.selected_video_url:
-            if st.button("Eliminar Video"):
-                delete_video(st.session_state.selected_video_url)
-                st.success("Video eliminado")
-                if 'selected_video_url' in st.session_state:
-                    del st.session_state['selected_video_url']
-                st.rerun()
-
-
-    with st.container():
-        col01, col02, col03 = st.columns(3)
-        with col03:
-            if st.button("Siguiente", use_container_width=True):
-                st.switch_page("pages/01_busqueda.py")
-            
-#==========================================================================================================================================
-    
+           
     # Sidebar para agregar videos
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
@@ -152,8 +134,28 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
+#==========================================================================================================================================
+    # Pagina principal - Reproductor principal de video
+    if 'selected_video_url' in st.session_state:
+        st.video(st.session_state.selected_video_url, autoplay=False)
 
-def extract_video_id(url):  
+        if st.session_state.selected_video_url:
+            if st.button("Eliminar Video"):
+                delete_video(st.session_state.selected_video_url)
+                st.success("Video eliminado")
+                if 'selected_video_url' in st.session_state:
+                    del st.session_state['selected_video_url']
+                st.rerun()
+
+
+    with st.container():
+        col01, col02, col03 = st.columns(3)
+        with col03:
+            if st.button("Siguiente", use_container_width=True):
+                st.switch_page("pages/01_busqueda.py")
+            
+#==========================================================================================================================================
+ def extract_video_id(url):  
     # Extrae el ID del video de una URL de YouTube.
     regex = (
         r'(https?://)?(www\.)?'
