@@ -54,7 +54,6 @@ def load_videos():
 def add_video(category, url, title):
     new_row = {'Category': category, 'URL': url, 'Title': title}
     sheet.append_row(list(new_row.values()))
-    st.rerun()
 
 # Eliminar un video de Google Sheets
 #def delete_video(index):
@@ -81,6 +80,7 @@ def main():
         slb_1 = st.selectbox('Categoria', df_1_1)
         # Filter out data
         df = df[(df["Category"] == slb_1)]
+        st.rerun()
         
         # Feature 2 filters
         df_2 = df["Title"].unique()
