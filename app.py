@@ -60,11 +60,17 @@ def add_video(category, url, title):
 #    sheet.delete_row(index + 2)  
 # # +2 porque Google Sheets es 1-indexed y hay una fila de encabezado
 
+# Eliminar un video de Google Sheets
 def delete_video(url):
     try:
         cell = sheet.find(url)
+        st.write(f"Buscando URL: {url}")
         if cell:
+            st.write(f"Encontrado en la fila: {cell.row}")
             sheet.delete_row(cell.row)
+            st.write("Fila eliminada")
+        else:
+            st.write("URL no encontrado en la hoja de cálculo")
     except Exception as e:
         st.error(f"Error al intentar eliminar el video: {e}")
 
