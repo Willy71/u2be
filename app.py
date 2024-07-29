@@ -15,7 +15,7 @@ st.set_page_config(
 # Conexion via gspread a traves de https://console.cloud.google.com/ y Google sheets
 
 # Credenciales de Google como un diccionario
-SERVICE_ACCOUNT_INFO = st.secrets["gsheet"]
+SERVICE_ACCOUNT_INFO = st.secrets["gsheets"]
 
 # Scopes necesarios
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
