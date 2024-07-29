@@ -170,7 +170,7 @@ def main():
                             if st.button("Cancelar"):
                                 st.session_state.confirm_delete = False
                                 st.rerun()
-                     with col19:               
+                    with col19:               
                         if st.button("Siguiente", use_container_width=True):
                             st.switch_page("pages/01_busqueda.py")
         #==================================================================================
