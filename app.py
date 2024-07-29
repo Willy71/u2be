@@ -154,9 +154,9 @@ def main():
             if st.button("Siguiente", use_container_width=True):
                 st.switch_page("pages/01_busqueda.py")
             
-#==========================================================================================================================================
- def extract_video_id(url):  
-    # Extrae el ID del video de una URL de YouTube.
+#=========================================================================================================================================
+def extract_video_id(url):  
+    Extrae el ID del video de una URL de YouTube.
     regex = (
         r'(https?://)?(www\.)?'
         '(youtube|youtu|youtube-nocookie)\.(com|be)/'
