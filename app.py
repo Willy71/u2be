@@ -30,7 +30,11 @@ try:
     sheet = gc.open_by_key(SPREADSHEET_KEY).worksheet(SHEET_NAME)
 except gspread.exceptions.SpreadsheetNotFound:
     st.error(f"No se encontró la hoja de cálculo con la clave '{SPREADSHEET_KEY}'. Asegúrate de que la clave es correcta y que has compartido la hoja con el correo electrónico del cliente de servicio.")
-
+except gspread.exceptions.APIError as e:
+    st.error(f"Error de API al intentar acceder a la hoja de cálculo: {e}")
+except Exception as e:
+    st.error(f"Ha ocurrido un error inesperado: {e}")
+    
 # Función para centrar el texto
 def centrar_texto(texto, tamanho, color):
     st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
