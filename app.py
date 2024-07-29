@@ -100,9 +100,9 @@ def main():
 
         # Reproductor principal de video
         if 'selected_video_url' not in st.session_state:
-            st.session_state.selected_video_url = df_video['URL']
+            st.session_state.selected_video_url = df_video['Url']
 
-        st.session_state.selected_video_url = df_video['URL']
+        st.session_state.selected_video_url = df_video['Url']
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
