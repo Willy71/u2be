@@ -72,7 +72,7 @@ def delete_video(url):
 
 def main():
     with st.container():
-        col11, col12, col13 = st.columns([4, 1, 8])
+        col11, col12 = st.columns([2.5, 9.5])
         with col11:
             # Mostrar categorías disponibles
             centrar_texto("Videos", 2, 'white')
@@ -135,7 +135,7 @@ def main():
                 else:
                     st.error("Por favor, ingresa una URL y una categoría.")
 #==========================================================================================================================================
-    with col13:
+    with col12:
         # Pagina principal - Reproductor principal de video
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
