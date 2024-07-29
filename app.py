@@ -140,7 +140,8 @@ def main():
         #centrar_texto("You2be", 1, "white")
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
-    
+            
+    with col14:
             if st.session_state.selected_video_url:
                 if st.button("Eliminar Video"):
                     delete_video(st.session_state.selected_video_url)
