@@ -15,7 +15,8 @@ st.set_page_config(
 # Conexion via gspread a traves de https://console.cloud.google.com/ y Google sheets
 
 # Ruta al archivo de credenciales
-SERVICE_ACCOUNT_FILE = '.gitignore/you2be_conection.json'
+# Leer las credenciales desde secrets
+SERVICE_ACCOUNT_FILE = st.secrets["gsheet"]
 
 # Scopes necesarios
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
