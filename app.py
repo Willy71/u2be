@@ -118,10 +118,10 @@ def main():
 
 
     with st.container():
-    col01, col02, col03 = st.columns(3)
-    with col03:
-        if st.button("Siguiente", use_container_width=True):
-            st.switch_page("pages/02_Backlog.py")
+        col01, col02, col03 = st.columns(3)
+        with col03:
+            if st.button("Siguiente", use_container_width=True):
+                st.switch_page("pages/02_Backlog.py")
             
 #==========================================================================================================================================
     
