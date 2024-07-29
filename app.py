@@ -99,15 +99,15 @@ def main():
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
-    st.video(st.session_state.selected_video_url, autoplay=False)
+        st.video(st.session_state.selected_video_url, autoplay=False)
 
-    if st.session_state.selected_video_url:
-        if st.button("Eliminar Video"):
-            delete_video(st.session_state.selected_video_url)
-            st.success("Video eliminado")
-            if 'selected_video_url' in st.session_state:
-                del st.session_state['selected_video_url']
-            st.rerun()
+        if st.session_state.selected_video_url:
+            if st.button("Eliminar Video"):
+                delete_video(st.session_state.selected_video_url)
+                st.success("Video eliminado")
+                if 'selected_video_url' in st.session_state:
+                    del st.session_state['selected_video_url']
+                st.rerun()
 
        
     # Sidebar para agregar videos
