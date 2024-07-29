@@ -164,5 +164,11 @@ def get_video_title(url):
         st.error(f"Error al obtener el título del video: {e}")
         return None
 
+with st.container():
+    col01, col02, col03 = st.columns(3)
+    with col01:
+        if st.button("Anterior", use_container_width=True):
+            st.switch_page("Home.py")
+
 if __name__ == "__main__":
     main()
