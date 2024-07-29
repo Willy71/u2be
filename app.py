@@ -140,8 +140,6 @@ def main():
         #centrar_texto("You2be", 1, "white")
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
-            
-    with col14:
             if st.session_state.selected_video_url:
                 if st.button("Eliminar Video"):
                     delete_video(st.session_state.selected_video_url)
@@ -149,14 +147,11 @@ def main():
                     if 'selected_video_url' in st.session_state:
                         del st.session_state['selected_video_url']
                     st.rerun()
-
-
-        with st.container():
-            col01, col02, col03 = st.columns(3)
-            with col03:
-                if st.button("Siguiente", use_container_width=True):
-                    st.switch_page("pages/01_busqueda.py")
-            
+                    
+    with col14:
+        if st.button("Siguiente", use_container_width=True):
+            st.switch_page("pages/01_busqueda.py")
+    
 #=========================================================================================================================================
 def extract_video_id(url):  
     # Extrae el ID del video de una URL de YouTube.
