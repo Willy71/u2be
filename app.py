@@ -70,89 +70,89 @@ def delete_video(url):
         st.error(f"Error al intentar eliminar el video: {e}")
 
 def main():
-    # Sidebar para seleccionar videos
-    with st.sidebar:
-        # Mostrar categorías disponibles
-        centrar_texto("Videos", 2, 'white')
-        df = load_videos()
-        
-        # Feature 1 filters
-        df_1 = df["Category"].unique()
-        df_1_1 = sorted(df_1)
-        slb_1 = st.selectbox('Categoria', df_1_1, key='category_selectbox')
-        
-        # Botón para actualizar la lista de títulos
-        if st.button("Actualizar títulos", key='update_titles_button'):
-            st.session_state['category_selected'] = slb_1
-
-        # Filtro por categoría seleccionada
-        if 'category_selected' in st.session_state:
-            df = df[df["Category"] == st.session_state['category_selected']]
-        else:
-            df = df[df["Category"] == slb_1]
-        
-        # Feature 2 filters
-        df_2 = df["Title"].unique()
-        df_2_1 = sorted(df_2)
-        slb_2 = st.selectbox('Titulo', df_2_1, key='title_selectbox')
-        
-        # Filtro por título seleccionado
-        df_video = df[df["Title"] == slb_2].iloc[0]
-
-        # Reproductor principal de video
-        if 'selected_video_url' not in st.session_state:
-            st.session_state.selected_video_url = df_video['Url']
-
-        st.session_state.selected_video_url = df_video['Url']
-
-                    
-#==========================================================================================================================================
-           
-    # Sidebar para agregar videos
-    with st.sidebar:
-        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
-        centrar_texto("Agregar video", 2, "white")
-
-        # Input de texto para ingresar la URL del video de YouTube
-        video_url = st.text_input("URL del video de YouTube:")
-
-        # Input de texto para ingresar la categoría
-        category = st.text_input("Ingresa la categoría del video:")
-
-        # Botón para agregar el video
-        if st.button("Agregar Video"):
-            if video_url and category:
-                video_id = extract_video_id(video_url)
-                if video_id:
-                    video_title = get_video_title(video_url)
-                    if video_title:
-                        add_video(category, video_url, video_title)
-                        st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
-                    else:
-                        st.error("No se pudo obtener el título del video. Verifica la URL.")
-                else:
-                    st.error("Por favor, ingresa una URL de YouTube válida.")
-            else:
-                st.error("Por favor, ingresa una URL y una categoría.")
-#==========================================================================================================================================
-    # Pagina principal - Reproductor principal de video
-    if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url, autoplay=False)
-
-        if st.session_state.selected_video_url:
-            if st.button("Eliminar Video"):
-                delete_video(st.session_state.selected_video_url)
-                st.success("Video eliminado")
-                if 'selected_video_url' in st.session_state:
-                    del st.session_state['selected_video_url']
-                st.rerun()
-
-
     with st.container():
-        col01, col02, col03 = st.columns(3)
-        with col03:
-            if st.button("Siguiente", use_container_width=True):
-                st.switch_page("pages/01_busqueda.py")
+        col11, col12 = st.columns([4,8])
+        with col11:
+            # Mostrar categorías disponibles
+            centrar_texto("Videos", 2, 'white')
+            df = load_videos()
+            
+            # Feature 1 filters
+            df_1 = df["Category"].unique()
+            df_1_1 = sorted(df_1)
+            slb_1 = st.selectbox('Categoria', df_1_1, key='category_selectbox')
+            
+            # Botón para actualizar la lista de títulos
+            if st.button("Actualizar títulos", key='update_titles_button'):
+                st.session_state['category_selected'] = slb_1
+    
+            # Filtro por categoría seleccionada
+            if 'category_selected' in st.session_state:
+                df = df[df["Category"] == st.session_state['category_selected']]
+            else:
+                df = df[df["Category"] == slb_1]
+            
+            # Feature 2 filters
+            df_2 = df["Title"].unique()
+            df_2_1 = sorted(df_2)
+            slb_2 = st.selectbox('Titulo', df_2_1, key='title_selectbox')
+            
+            # Filtro por título seleccionado
+            df_video = df[df["Title"] == slb_2].iloc[0]
+    
+            # Reproductor principal de video
+            if 'selected_video_url' not in st.session_state:
+                st.session_state.selected_video_url = df_video['Url']
+    
+            st.session_state.selected_video_url = df_video['Url']
+    
+                        
+    #==========================================================================================================================================
+               
+            st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
+            centrar_texto("Agregar video", 2, "white")
+    
+            # Input de texto para ingresar la URL del video de YouTube
+            video_url = st.text_input("URL del video de YouTube:")
+    
+            # Input de texto para ingresar la categoría
+            category = st.text_input("Ingresa la categoría del video:")
+    
+            # Botón para agregar el video
+            if st.button("Agregar Video"):
+                if video_url and category:
+                    video_id = extract_video_id(video_url)
+                    if video_id:
+                        video_title = get_video_title(video_url)
+                        if video_title:
+                            add_video(category, video_url, video_title)
+                            st.success(f"Video '{video_title}' agregado a la categoría '{category}'")
+                        else:
+                            st.error("No se pudo obtener el título del video. Verifica la URL.")
+                    else:
+                        st.error("Por favor, ingresa una URL de YouTube válida.")
+                else:
+                    st.error("Por favor, ingresa una URL y una categoría.")
+#==========================================================================================================================================
+    with col11:
+        # Pagina principal - Reproductor principal de video
+        if 'selected_video_url' in st.session_state:
+            st.video(st.session_state.selected_video_url, autoplay=False)
+    
+            if st.session_state.selected_video_url:
+                if st.button("Eliminar Video"):
+                    delete_video(st.session_state.selected_video_url)
+                    st.success("Video eliminado")
+                    if 'selected_video_url' in st.session_state:
+                        del st.session_state['selected_video_url']
+                    st.rerun()
+
+
+        with st.container():
+            col01, col02, col03 = st.columns(3)
+            with col03:
+                if st.button("Siguiente", use_container_width=True):
+                    st.switch_page("pages/01_busqueda.py")
             
 #=========================================================================================================================================
 def extract_video_id(url):  
