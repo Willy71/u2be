@@ -1,10 +1,11 @@
 import streamlit as st
 
-# Colocar nome na pagina, icone e ampliar a tela
+# Configuración de la página
 st.set_page_config(
     page_title="Busquedas",
-    page_icon=":)",
-    layout="wide"
+    page_icon="▶️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 with st.container():
