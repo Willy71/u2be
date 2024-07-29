@@ -9,6 +9,7 @@ from pytube import YouTube
 st.set_page_config(
     page_title="You 2 be",
     page_icon="▶️",
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
 
@@ -71,7 +72,7 @@ def delete_video(url):
 
 def main():
     with st.container():
-        col11, col12 = st.columns([4,8])
+        col11, col12, col13 = st.columns([4, 1, 8])
         with col11:
             # Mostrar categorías disponibles
             centrar_texto("Videos", 2, 'white')
@@ -134,7 +135,7 @@ def main():
                 else:
                     st.error("Por favor, ingresa una URL y una categoría.")
 #==========================================================================================================================================
-    with col12:
+    with col13:
         # Pagina principal - Reproductor principal de video
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
