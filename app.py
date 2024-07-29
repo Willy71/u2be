@@ -67,7 +67,7 @@ def delete_video(url):
         st.write(f"Buscando URL: {url}")
         if cell:
             st.write(f"Encontrado en la fila: {cell.row}")
-            sheet.delete_row(cell.row)
+            sheet.gspread.delete_row(cell.row)
             st.write("Fila eliminada")
         else:
             st.write("URL no encontrado en la hoja de cálculo")
