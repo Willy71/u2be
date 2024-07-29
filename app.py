@@ -61,9 +61,12 @@ def add_video(category, url, title):
 # # +2 porque Google Sheets es 1-indexed y hay una fila de encabezado
 
 def delete_video(url):
-    cell = sheet.gspread.find(url)
-    if cell:
-        sheet.gspread.delete_row(cell.row)# Eliminar un video de Google Sheets
+    try:
+        cell = sheet.find(url)
+        if cell:
+            sheet.delete_row(cell.row)
+    except Exception as e:
+        st.error(f"Error al intentar eliminar el video: {e}")
 
 def main():
     # Sidebar para agregar y seleccionar videos
@@ -96,14 +99,16 @@ def main():
 
     # Reproductor principal de video
     if 'selected_video_url' in st.session_state:
-        st.video(st.session_state.selected_video_url, autoplay=False)
+    st.video(st.session_state.selected_video_url, autoplay=False)
 
-        if st.session_state.selected_video_url:
-            if st.button("Eliminar Video"):
-                delete_video(st.session_state.selected_video_url)
-                st.success("Video eliminado")
+    if st.session_state.selected_video_url:
+        if st.button("Eliminar Video"):
+            delete_video(st.session_state.selected_video_url)
+            st.success("Video eliminado")
+            if 'selected_video_url' in st.session_state:
                 del st.session_state['selected_video_url']
-                st.rerun()
+            st.rerun()
+
        
     # Sidebar para agregar videos
     with st.sidebar:
