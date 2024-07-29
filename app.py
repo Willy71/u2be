@@ -134,7 +134,7 @@ def main():
                 else:
                     st.error("Por favor, ingresa una URL y una categoría.")
 #==========================================================================================================================================
-    with col11:
+    with col12:
         # Pagina principal - Reproductor principal de video
         if 'selected_video_url' in st.session_state:
             st.video(st.session_state.selected_video_url, autoplay=False)
