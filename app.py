@@ -16,7 +16,7 @@ st.set_page_config(
 # Conexion via gspread a traves de https://console.cloud.google.com/ y Google sheets
 
 # Ruta al archivo de credenciales
-SERVICE_ACCOUNT_FILE = 'C:/Users/guill/OneDrive/Documentos/python_projects/Youtube ST/.streamlit/you2be_conection.json'
+SERVICE_ACCOUNT_INFO = st.secrets["gsheets"]
 
 # Scopes necesarios
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
