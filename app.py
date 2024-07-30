@@ -22,7 +22,7 @@ SERVICE_ACCOUNT_INFO = st.secrets["gsheets"]
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
 # Cargar credenciales y autorizar
-credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
 gc = gspread.authorize(credentials)
 
 # Clave de la hoja de cálculo (la parte de la URL después de "/d/" y antes de "/edit")
