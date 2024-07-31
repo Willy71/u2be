@@ -59,9 +59,9 @@ def add_video(category, url, title):
 
 # Eliminar un video de Google Sheets
 def delete_video(url):
-    cell = sheet.gspread.find(url)
+    cell = sheet.find(url)
     if cell:
-        sheet.gspread.delete_row(cell.row)
+        sheet.delete_rows(cell.row)
 
 def main():
     # Sidebar para agregar y seleccionar videos
