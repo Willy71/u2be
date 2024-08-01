@@ -35,14 +35,15 @@ def main():
     api_key = st.secrets["youtube"]["api_key"]
     #st.text("UCpVi9NfcKzRmNyVFkbsq3lA")
     channel_id = st.sidebar.text_input("Ingresa un Channel ID")
-    st.sidebar.text("UC6k75c31768jOTvq38SQf6w")
-    st.sidebar.text("UCpVi9NfcKzRmNyVFkbsq3lA")
 
     if api_key and channel_id:
         youtube = build('youtube', 'v3', developerKey=api_key)
         playlists = get_playlists(youtube, channel_id)
         playlist_titles = [playlist['snippet']['title'] for playlist in playlists]
-        selected_playlist = st.sidebar.selectbox("Selecciona una lista de reproducción", playlist_titles)
+        selected_playlist = st.sidebar.selectbox("Selecciona una lista de reproducción", playlist_titles
+
+    st.sidebar.text("Willy UC6k75c31768jOTvq38SQf6w")
+    st.sidebar.text("Samy UCpVi9NfcKzRmNyVFkbsq3lA")
 
         if selected_playlist:
             playlist_id = next(playlist['id'] for playlist in playlists if playlist['snippet']['title'] == selected_playlist)
