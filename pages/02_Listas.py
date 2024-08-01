@@ -5,7 +5,17 @@ import streamlit as st
 from googleapiclient.discovery import build
 
 # Configuración de la página
-st.set_page_config(page_title="YouTube Playlist Player", page_icon="▶️")
+st.set_page_config(
+    page_title="Playlist Player",
+    page_icon="▶️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# Función para centrar el texto
+def centrar_texto(texto, tamanho, color):
+    st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
+                unsafe_allow_html=True)
 
 def get_playlists(youtube, channel_id):
     # Recuperar listas de reproducción del canal
@@ -28,7 +38,7 @@ def get_videos(youtube, playlist_id):
     return response['items']
 
 def main():
-    st.title("YouTube Playlist Player")
+    centrar_texto("Playlist Player", 2, 'white')
     st.sidebar.title("Opciones")
 
     # Entradas de texto para la API key y el channel ID
