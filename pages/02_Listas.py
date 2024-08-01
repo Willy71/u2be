@@ -40,7 +40,7 @@ def main():
         youtube = build('youtube', 'v3', developerKey=api_key)
         playlists = get_playlists(youtube, channel_id)
         playlist_titles = [playlist['snippet']['title'] for playlist in playlists]
-        selected_playlist = st.sidebar.selectbox("Selecciona una lista de reproducción", playlist_titles
+        selected_playlist = st.sidebar.selectbox("Selecciona una lista de reproducción", playlist_titles)
 
     st.sidebar.text("Willy UC6k75c31768jOTvq38SQf6w")
     st.sidebar.text("Samy UCpVi9NfcKzRmNyVFkbsq3lA")
