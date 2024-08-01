@@ -109,7 +109,7 @@ def main():
                         st.rerun()
                 with col19:               
                     if st.button("Siguiente", use_container_width=True):
-                        st.switch_page("pages/01_busqueda.py")
+                        st.switch_page("pages/01_Busquedas.py")
                                       
     # Sidebar para agregar videos
     with st.sidebar:
