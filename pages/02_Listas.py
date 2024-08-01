@@ -34,8 +34,9 @@ def main():
     # Entradas de texto para la API key y el channel ID
     api_key = st.secrets["youtube"]["api_key"]
     #st.text("UCpVi9NfcKzRmNyVFkbsq3lA")
-    channel_id = st.sidebar.text_input("Ingresa un Channel ID \n UC6k75c31768jOTvq38SQf6w \n UCpVi9NfcKzRmNyVFkbsq3lA")
-    
+    channel_id = st.sidebar.text_input("Ingresa un Channel ID")
+    st.sidebar.text("UC6k75c31768jOTvq38SQf6w")
+    st.sidebar.text("UCpVi9NfcKzRmNyVFkbsq3lA")
 
     if api_key and channel_id:
         youtube = build('youtube', 'v3', developerKey=api_key)
