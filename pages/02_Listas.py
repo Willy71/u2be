@@ -42,9 +42,6 @@ def main():
         playlist_titles = [playlist['snippet']['title'] for playlist in playlists]
         selected_playlist = st.sidebar.selectbox("Selecciona una lista de reproducción", playlist_titles)
 
-    st.sidebar.text("Willy UC6k75c31768jOTvq38SQf6w")
-    st.sidebar.text("Samy UCpVi9NfcKzRmNyVFkbsq3lA")
-
         if selected_playlist:
             playlist_id = next(playlist['id'] for playlist in playlists if playlist['snippet']['title'] == selected_playlist)
             videos = get_videos(youtube, playlist_id)
@@ -63,6 +60,10 @@ def main():
             st.warning("Por favor, selecciona una lista de reproducción.")
     else:
         st.warning("Por favor, ingresa tu API Key y Channel ID.")
+
+
+st.sidebar.text("Willy UC6k75c31768jOTvq38SQf6w")
+st.sidebar.text("Samy UCpVi9NfcKzRmNyVFkbsq3lA")
 
 if __name__ == "__main__":
     main()
