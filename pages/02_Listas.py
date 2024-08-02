@@ -38,7 +38,7 @@ def get_videos(youtube, playlist_id):
     return response['items']
 
 def main():
-    centrar_texto("Playlist Player", 2, 'white')
+    #centrar_texto("Playlist Player", 2, 'white')
     st.sidebar.title("Opciones")
 
     # Entradas de texto para la API key y el channel ID
