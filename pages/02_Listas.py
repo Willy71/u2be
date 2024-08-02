@@ -64,7 +64,7 @@ def main():
             # Insertar el reproductor de YouTube centrado
             st.markdown(f"""
             <div style="display: flex; justify-content: center;">
-                <iframe id="player" type="text/html" width="768" height="468"
+                <iframe id="player" type="text/html" width="832" height="507"
                 src="https://www.youtube.com/embed/{video_ids[0]}?playlist={playlist}&autoplay=1&controls=1&loop=1"
                 frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
