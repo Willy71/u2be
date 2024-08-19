@@ -12,6 +12,18 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# We reduced the empty space at the beginning of the streamlit
+reduce_space ="""
+            <style type="text/css">
+            /* Remueve el espacio en el encabezado por defecto de las apps de Streamlit */
+            div[data-testid="stAppViewBlockContainer"]{
+                padding-top:30px;
+            }
+            </style>
+            """
+# We load reduce_space
+st.html(reduce_space)
+
 # Configuración de la API de Google Sheets
 SERVICE_ACCOUNT_INFO = st.secrets["gsheets"]
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets",
@@ -30,8 +42,6 @@ YOUTUBE_API_KEY = st.secrets["youtube"]["api_key"]
 youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
 
 # Función para centrar el texto
-
-
 def centrar_texto(texto, tamanho, color):
     st.markdown(
         f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>", unsafe_allow_html=True)
@@ -78,8 +88,6 @@ def search_youtube(query, max_results=10):
     return videos
 
 # Función para agregar video a una lista
-
-
 def add_video_to_list(category, url, title):
     try:
         sheet = gc.open_by_key(SPREADSHEET_KEY).worksheet(SHEET_NAME)
@@ -90,8 +98,6 @@ def add_video_to_list(category, url, title):
         st.error(f"Error al agregar el video a la lista: {e}")
 
 # Función principal
-
-
 def main():
     centrar_texto("Búsqueda de Videos en YouTube", 1, 'white')
 
