@@ -13,6 +13,18 @@ from googleapiclient.discovery import build
 # Configuración de la página
 st.set_page_config(page_title="YouTube Playlist Player", page_icon="❤")
 
+# We reduced the empty space at the beginning of the streamlit
+reduce_space ="""
+            <style type="text/css">
+            /* Remueve el espacio en el encabezado por defecto de las apps de Streamlit */
+            div[data-testid="stAppViewBlockContainer"]{
+                padding-top:30px;
+            }
+            </style>
+            """
+# We load reduce_space
+st.html(reduce_space)
+
 # Clave de la API de YouTube
 api_key = st.secrets["youtube"]["api_key"]
 
