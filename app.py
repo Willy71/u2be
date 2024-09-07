@@ -58,12 +58,15 @@ def get_video_title(url):
     except Exception as e:
         st.error(f"Error al obtener el título del video: {e}")
         return None
-    
+
 # Eliminar un video de Google Sheets
 def delete_video(url):
     cell = sheet.find(url)
     if cell:
         sheet.delete_rows(cell.row)
+
+def add_video(category, url, title):
+    sheet.append_row([category, title, url])
 
 def main():
     # Cargar los videos desde Google Sheets
@@ -83,40 +86,32 @@ def main():
         slb_1 = st.selectbox('Categoria', df_1_1)
 
         # Filtrar videos por categoría
-        df = df[df["Category"] == slb_1]
+        df_filtered = df[df["Category"] == slb_1]
+
+        # Mostrar los títulos en radio buttons
+        if not df_filtered.empty:
+            df_titles = df_filtered["Title"].unique()
+            df_titles = sorted(df_titles)
+            slb_2 = st.radio("Selecciona un video para reproducir", df_titles)
+            
+            # Filtrar el DataFrame por el título seleccionado
+            df_video = df_filtered[df_filtered["Title"] == slb_2].iloc[0]
+
+            # Reproductor principal de video
+            st.markdown(f"""
+            <div style="display: flex; justify-content: center;">
+                <iframe id="player" type="text/html" width="832" height="507"
+                src="https://www.youtube.com/embed/{extract_video_id(df_video['Url'])}?autoplay=1&controls=1"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            """, unsafe_allow_html=True)
         
-        # Feature 2 filters
-        df_2 = df["Title"].unique()
-        df_2_1 = sorted(df_2)
-        slb_2 = st.radio("Selecciona un video para reproducir", df_2_1, format_func=lambda url: df_2_1[df_2_1["Url"].apply(extract_video_id) == url]["Title"].values[0])
-        # Filter out data
-        df = df[(df["Title"] == slb_2)]
-             
-        df_video = df[df["Title"] == slb_2].iloc[0]
-
-        # Reproductor principal de video
-        if 'selected_video_url' not in st.session_state:
-            st.session_state.selected_video_url = df_video['Url']
-
-        st.session_state.selected_video_url = df_video['Url']
-
-    # Reproductor principal de video
-    if 'selected_video_url' in st.session_state:          
-        st.markdown(f"""
-        <div style="display: flex; justify-content: center;">
-            <iframe id="player" type="text/html" width="832" height="507"
-            src="https://www.youtube.com/embed/{df_video}?autoplay=1&controls=1"
-            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.text("")
-    
-    with st.container():
+            # Botón para eliminar el video
+            with st.container():
                 col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
                 with col15:         
                     if st.button("Eliminar Video"):
-                        delete_video(df_video)
+                        delete_video(df_video['Url'])
                         st.success("Video eliminado")
                         st.rerun()
 
