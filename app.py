@@ -48,7 +48,7 @@ def extract_video_id(url):
     regex = r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.+\?v=([^&=%\?]{11})'
     match = re.match(regex, url)
     if match:
-        return match.group(4)
+        return match.group(5)  # Aseguramos que se extrae el video_id correctamente
     return None
 
 def get_video_title(url):
@@ -91,17 +91,15 @@ def main():
                     format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0]
                 )
 
-                # Generar la lista de reproducción en formato JavaScript
-                playlist = ','.join(video_ids)
-
-                # Insertar el reproductor de YouTube centrado en la pantalla principal
-                st.markdown(f"""
-                <div style="display: flex; justify-content: center;">
-                    <iframe id="player" type="text/html" width="832" height="507"
-                    src="https://www.youtube.com/embed/{clicked_video_id}?playlist={playlist}&autoplay=1&controls=1&loop=1"
-                    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                """, unsafe_allow_html=True)
+                # Mover la parte del reproductor a la pantalla principal
+                if clicked_video_id:
+                    st.markdown(f"""
+                    <div style="display: flex; justify-content: center;">
+                        <iframe id="player" type="text/html" width="832" height="507"
+                        src="https://www.youtube.com/embed/{clicked_video_id}?autoplay=1&controls=1"
+                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    """, unsafe_allow_html=True)
             else:
                 st.warning("No se encontraron URLs válidas para los videos.")
         else:
