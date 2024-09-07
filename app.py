@@ -59,18 +59,6 @@ def get_video_title(url):
         st.error(f"Error al obtener el título del video: {e}")
         return None
 
-def add_video(category, url, title):
-    new_row = {'Category': category, 'Url': url, 'Title': title}
-    sheet.append_row(list(new_row.values()))
-    st.rerun()
-
-def delete_video(url):
-    cell = sheet.find(url)
-    if cell:
-        sheet.delete_rows(cell.row)
-        st.success(f"Video con URL '{url}' ha sido eliminado.")
-        st.rerun()
-
 def main():
     # Cargar los videos desde Google Sheets
     df = load_videos()
@@ -91,7 +79,7 @@ def main():
         # Filtrar videos por categoría
         df = df[df["Category"] == slb_1]
 
-        # Mostrar los títulos en radio buttons
+        # Mostrar los títulos y URLs en radio buttons
         if not df.empty:
             video_ids = df["Url"].apply(extract_video_id)
             video_ids = video_ids[video_ids.notnull()]
@@ -102,21 +90,17 @@ def main():
                     video_ids,
                     format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0]
                 )
-                
-                # Mostrar el reproductor en la pantalla principal
-                st.markdown(f"""
-                <div style="display: flex; justify-content: center;">
-                    <iframe id="player" type="text/html" width="832" height="507"
-                    src="https://www.youtube.com/embed/{clicked_video_id}?autoplay=1&controls=1"
-                    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                st.warning("No se encontraron URLs válidas para los videos.")
-        else:
-            st.warning("No se encontraron videos en la categoría seleccionada.")
 
-    # Sección para agregar y eliminar videos
+                
+    st.markdown(f"""
+    <div style="display: flex; justify-content: center;">
+        <iframe id="player" type="text/html" width="832" height="507"
+        src="https://www.youtube.com/embed/{clicked_video_id}?autoplay=1&controls=1"
+        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Sección para agregar videos
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
         centrar_texto("Agregar video", 2, "white")
@@ -139,17 +123,6 @@ def main():
                     st.error("Por favor, ingresa una URL de YouTube válida.")
             else:
                 st.error("Por favor, ingresa una URL y una categoría.")
-
-        # Mostrar opción para eliminar un video
-        st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
-        centrar_texto("Eliminar video", 2, "white")
-        
-        delete_url = st.text_input("URL del video a eliminar:")
-        if st.button("Eliminar Video"):
-            if delete_url:
-                delete_video(delete_url)
-            else:
-                st.error("Por favor, ingresa una URL de video para eliminar.")
 
 if __name__ == "__main__":
     main()
