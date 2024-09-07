@@ -110,10 +110,8 @@ def main():
                 col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
                 with col15:         
                     if st.button("Eliminar Video"):
-                        delete_video(st.session_state.selected_video_url)
+                        delete_video(clicked_video_id)
                         st.success("Video eliminado")
-                        if 'selected_video_url' in st.session_state:
-                            del st.session_state['selected_video_url']
                         st.rerun()
 
     # Sección para agregar videos
