@@ -58,6 +58,12 @@ def get_video_title(url):
     except Exception as e:
         st.error(f"Error al obtener el título del video: {e}")
         return None
+    
+# Eliminar un video de Google Sheets
+def delete_video(url):
+    cell = sheet.find(url)
+    if cell:
+        sheet.delete_rows(cell.row)
 
 def main():
     # Cargar los videos desde Google Sheets
@@ -78,10 +84,14 @@ def main():
 
         # Filtrar videos por categoría
         df = df[df["Category"] == slb_1]
+        
+        # Feature 2 filters
+        df_2 = df["Title"].unique()
+        df_2_1 = sorted(df_2)
 
         # Mostrar los títulos y URLs en radio buttons
         if not df.empty:
-            video_ids = df["Url"].apply(extract_video_id)
+            video_ids = df_2_1["Url"].apply(extract_video_id)
             video_ids = video_ids[video_ids.notnull()]
 
             if not video_ids.empty:
@@ -90,15 +100,23 @@ def main():
                     video_ids,
                     format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0]
                 )
-
                 
-    st.markdown(f"""
-    <div style="display: flex; justify-content: center;">
-        <iframe id="player" type="text/html" width="832" height="507"
-        src="https://www.youtube.com/embed/{clicked_video_id}?autoplay=1&controls=1"
-        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-    """, unsafe_allow_html=True)
+            # Reproductor principal de video
+            if 'selected_video_url' not in st.session_state:
+                st.session_state.selected_video_url = clicked_video_id
+
+            st.session_state.selected_video_url = clicked_video_id
+    
+    # Reproductor principal de video
+    if 'selected_video_url' in st.session_state:
+                    
+        st.markdown(f"""
+        <div style="display: flex; justify-content: center;">
+            <iframe id="player" type="text/html" width="832" height="507"
+            src="https://www.youtube.com/embed/{clicked_video_id}?autoplay=1&controls=1"
+            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Sección para agregar videos
     with st.sidebar:
