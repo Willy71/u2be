@@ -84,27 +84,31 @@ def main():
 
         # Filtrar videos por categoría
         df = df[df["Category"] == slb_1]
+        
+        # Feature 2 filters
+        df_2 = df["Title"].unique()
+        df_2_1 = sorted(df_2)
+        slb_2 = st.radio("Selecciona un video para reproducir", df_2_1, format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0])
+        # Filter out data
+        df = df[(df["Title"] == slb_2)]
+             
+        df_video = df[df["Title"] == slb_2].iloc[0]
 
-        # Mostrar los títulos y URLs en radio buttons
-        if not df.empty:
-            video_ids = df["Url"].apply(extract_video_id)
-            video_ids = video_ids[video_ids.notnull()]
+        # Reproductor principal de video
+        if 'selected_video_url' not in st.session_state:
+            st.session_state.selected_video_url = df_video['Url']
 
-            if not video_ids.empty:
-                clicked_video_id = st.radio(
-                    "Selecciona un video para reproducir",
-                    video_ids,
-                    format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0]
-                )
+        st.session_state.selected_video_url = df_video['Url']
 
-                
-    st.markdown(f"""
-    <div style="display: flex; justify-content: center;">
-        <iframe id="player" type="text/html" width="832" height="507"
-        src="https://www.youtube.com/embed/{clicked_video_id}?autoplay=1&controls=1"
-        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-    """, unsafe_allow_html=True)
+    # Reproductor principal de video
+    if 'selected_video_url' in st.session_state:          
+        st.markdown(f"""
+        <div style="display: flex; justify-content: center;">
+            <iframe id="player" type="text/html" width="832" height="507"
+            src="https://www.youtube.com/embed/{df_video}?autoplay=1&controls=1"
+            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        """, unsafe_allow_html=True)
     
     st.text("")
     
@@ -112,7 +116,7 @@ def main():
                 col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
                 with col15:         
                     if st.button("Eliminar Video"):
-                        delete_video(video_ids)
+                        delete_video(df_video)
                         st.success("Video eliminado")
                         st.rerun()
 
