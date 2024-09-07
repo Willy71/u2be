@@ -105,7 +105,7 @@ def main():
         frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
     """, unsafe_allow_html=True)
-    
+    st.text("")
     with st.container():
                 col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
                 with col15:         
