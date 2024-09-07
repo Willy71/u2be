@@ -11,10 +11,9 @@ st.set_page_config(
     page_icon="▶️",
 )
 
-# We reduced the empty space at the beginning of the streamlit
+# Reducir espacio en la parte superior
 reduce_space ="""
             <style type="text/css">
-            /* Remueve el espacio en el encabezado por defecto de las apps de Streamlit */
             div[data-testid="stAppViewBlockContainer"]{
                 padding-top:30px;
             }
@@ -23,63 +22,35 @@ reduce_space ="""
 st.markdown(reduce_space, unsafe_allow_html=True)
 
 #=============================================================================================================================
-# Conexion via gspread a traves de https://console.cloud.google.com/ y Google sheets
-
-# Ruta al archivo de credenciales
+# Conexión con Google Sheets
 SERVICE_ACCOUNT_INFO = st.secrets["gsheets"]
-
-# Scopes necesarios
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-
-# Cargar credenciales y autorizar
 credentials = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
 gc = gspread.authorize(credentials)
-
-# Clave de la hoja de cálculo (la parte de la URL después de "/d/" y antes de "/edit")
-SPREADSHEET_KEY = '1NQN92mhMxhhj9CP3OfYxo_aowkI74y49sSPvStIiXn0'  # Reemplaza con la clave de tu documento
-SHEET_NAME = 'youtube_videos'  # Nombre de la hoja dentro del documento
-#=============================================================================================================================
+SPREADSHEET_KEY = '1NQN92mhMxhhj9CP3OfYxo_aowkI74y49sSPvStIiXn0'
+SHEET_NAME = 'youtube_videos'
 
 try:
     sheet = gc.open_by_key(SPREADSHEET_KEY).worksheet(SHEET_NAME)
 except gspread.exceptions.SpreadsheetNotFound:
     st.error(f"No se encontró la hoja de cálculo con la clave '{SPREADSHEET_KEY}'.")
 
-# Función para centrar el texto
+# Funciones auxiliares
 def centrar_texto(texto, tamanho, color):
-    st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>",
-                unsafe_allow_html=True)
+    st.markdown(f"<h{tamanho} style='text-align: center; color: {color}'>{texto}</h{tamanho}>", unsafe_allow_html=True)
 
-# Cargar los videos desde Google Sheets
 def load_videos():
     rows = sheet.get_all_records()
     df = pd.DataFrame(rows)
     return df
 
-# Agregar un video a Google Sheets
-def add_video(category, url, title):
-    new_row = {'Category': category, 'Url': url, 'Title': title}
-    sheet.append_row(list(new_row.values()))
-    st.rerun()
-
-# Eliminar un video de Google Sheets
-def delete_video(url):
-    cell = sheet.find(url)
-    if cell:
-        sheet.delete_rows(cell.row)
-
-# Función para obtener ID de video de una URL de YouTube
 def extract_video_id(url):  
-    regex = (
-        r'(https?://)?(www\.)?'
-        '(youtube|youtu|youtube-nocookie)\.(com|be)/'
-        '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
+    regex = r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.+\?v=([^&=%\?]{11})'
     match = re.match(regex, url)
     if match:
-        return match.group(6)
+        return match.group(4)
     return None
 
-# Obtener el título del video con pytube
 def get_video_title(url):
     try:
         yt = YouTube(url)
@@ -89,37 +60,32 @@ def get_video_title(url):
         return None
 
 def main():
+    # Cargar los videos desde Google Sheets
+    df = load_videos()
+
+    if df.empty:
+        st.warning("No se encontraron videos en la base de datos.")
+        return
+
     # Sidebar para seleccionar videos
     with st.sidebar:
         centrar_texto("Videos", 2, 'white')
-        df = load_videos()
 
-        if df.empty:
-            st.warning("No se encontraron videos en la base de datos.")
-            return
-        
+        # Mostrar las categorías
         df_1 = df["Category"].unique()
         df_1_1 = sorted(df_1)
         slb_1 = st.selectbox('Categoria', df_1_1)
-        
-        df = df[(df["Category"] == slb_1)]
-        
-        df_2 = df["Title"].unique()
-        df_2_1 = sorted(df_2)
-        slb_2 = st.selectbox('Titulo', df_2_1)
-        
-        df_video = df[df["Title"] == slb_2].iloc[0]
 
-        # Reproductor centrado
-        st.markdown("### Videos en la lista de reproducción")
-        
+        # Filtrar videos por categoría
+        df = df[df["Category"] == slb_1]
+
+        # Mostrar los títulos y URLs en radio buttons
         if not df.empty:
             video_ids = df["Url"].apply(extract_video_id)
-            # Asegurarse de que no haya IDs nulos
             video_ids = video_ids[video_ids.notnull()]
 
             if not video_ids.empty:
-                clicked_video_id = st.sidebar.radio(
+                clicked_video_id = st.radio(
                     "Selecciona un video para reproducir",
                     video_ids,
                     format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0]
@@ -128,7 +94,7 @@ def main():
                 # Generar la lista de reproducción en formato JavaScript
                 playlist = ','.join(video_ids)
 
-                # Insertar el reproductor de YouTube centrado
+                # Insertar el reproductor de YouTube centrado en la pantalla principal
                 st.markdown(f"""
                 <div style="display: flex; justify-content: center;">
                     <iframe id="player" type="text/html" width="832" height="507"
@@ -141,6 +107,7 @@ def main():
         else:
             st.warning("No se encontraron videos en la categoría seleccionada.")
 
+    # Sección para agregar videos
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
         centrar_texto("Agregar video", 2, "white")
