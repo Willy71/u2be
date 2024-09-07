@@ -97,23 +97,23 @@ def main():
             # Filtrar el DataFrame por el título seleccionado
             df_video = df_filtered[df_filtered["Title"] == slb_2].iloc[0]
 
-            # Reproductor principal de video
-            st.markdown(f"""
-            <div style="display: flex; justify-content: center;">
-                <iframe id="player" type="text/html" width="832" height="507"
-                src="https://www.youtube.com/embed/{extract_video_id(df_video['Url'])}?autoplay=1&controls=1"
-                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            """, unsafe_allow_html=True)
-        
-            # Botón para eliminar el video
-            with st.container():
-                col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
-                with col15:         
-                    if st.button("Eliminar Video"):
-                        delete_video(df_video['Url'])
-                        st.success("Video eliminado")
-                        st.rerun()
+    # Reproductor principal de video
+    st.markdown(f"""
+    <div style="display: flex; justify-content: center;">
+        <iframe id="player" type="text/html" width="832" height="507"
+        src="https://www.youtube.com/embed/{extract_video_id(df_video['Url'])}?autoplay=1&controls=1"
+        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Botón para eliminar el video
+    with st.container():
+        col15, col16, col17, col18, col19 = st.columns([3,1,1,1,2])
+        with col15:         
+            if st.button("Eliminar Video"):
+                delete_video(df_video['Url'])
+                st.success("Video eliminado")
+                st.rerun()
 
     # Sección para agregar videos
     with st.sidebar:
