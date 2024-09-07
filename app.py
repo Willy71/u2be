@@ -93,6 +93,10 @@ def main():
     with st.sidebar:
         centrar_texto("Videos", 2, 'white')
         df = load_videos()
+
+        if df.empty:
+            st.warning("No se encontraron videos en la base de datos.")
+            return
         
         df_1 = df["Category"].unique()
         df_1_1 = sorted(df_1)
@@ -108,23 +112,34 @@ def main():
 
         # Mostrar miniaturas y títulos en la barra lateral
         st.sidebar.markdown("### Videos en la lista de reproducción")
-        clicked_video_id = st.sidebar.radio(
-            "Selecciona un video para reproducir",
-            df["Url"].apply(extract_video_id),
-            format_func=lambda url: df[df["Url"] == url]["Title"].values[0]
-        )
+        
+        if not df.empty:
+            video_ids = df["Url"].apply(extract_video_id)
+            # Asegurarse de que no haya IDs nulos
+            video_ids = video_ids[video_ids.notnull()]
 
-        # Generar la lista de reproducción en formato JavaScript
-        playlist = ','.join(df["Url"].apply(extract_video_id))
+            if not video_ids.empty:
+                clicked_video_id = st.sidebar.radio(
+                    "Selecciona un video para reproducir",
+                    video_ids,
+                    format_func=lambda url: df[df["Url"].apply(extract_video_id) == url]["Title"].values[0]
+                )
 
-        # Insertar el reproductor de YouTube centrado
-        st.markdown(f"""
-        <div style="display: flex; justify-content: center;">
-            <iframe id="player" type="text/html" width="832" height="507"
-            src="https://www.youtube.com/embed/{clicked_video_id}?playlist={playlist}&autoplay=1&controls=1&loop=1"
-            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        """, unsafe_allow_html=True)
+                # Generar la lista de reproducción en formato JavaScript
+                playlist = ','.join(video_ids)
+
+                # Insertar el reproductor de YouTube centrado
+                st.markdown(f"""
+                <div style="display: flex; justify-content: center;">
+                    <iframe id="player" type="text/html" width="832" height="507"
+                    src="https://www.youtube.com/embed/{clicked_video_id}?playlist={playlist}&autoplay=1&controls=1&loop=1"
+                    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.warning("No se encontraron URLs válidas para los videos.")
+        else:
+            st.warning("No se encontraron videos en la categoría seleccionada.")
 
     with st.sidebar:
         st.markdown("""<hr style="height:10px;border:none;color:#333;background-color:#1717dc;" /> """, unsafe_allow_html=True)
