@@ -88,7 +88,7 @@ def main():
         # Feature 2 filters
         df_2 = df["Title"].unique()
         df_2_1 = sorted(df_2)
-        slb_2 = st.radio("Selecciona un video para reproducir", df_2_1)
+        slb_2 = st.radio("Selecciona un video para reproducir", df_2_1, format_func=lambda url: df_2_1[df_2_1["Url"].apply(extract_video_id) == url]["Title"].values[0])
         # Filter out data
         df = df[(df["Title"] == slb_2)]
              
