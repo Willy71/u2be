@@ -110,8 +110,8 @@ def main():
         
         df_video = df[df["Title"] == slb_2].iloc[0]
 
-        # Mostrar miniaturas y títulos en la barra lateral
-        st.sidebar.markdown("### Videos en la lista de reproducción")
+        # Reproductor centrado
+        st.markdown("### Videos en la lista de reproducción")
         
         if not df.empty:
             video_ids = df["Url"].apply(extract_video_id)
