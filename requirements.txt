@@ -2,4 +2,5 @@ gspread
 oauth2client
 google-api-python-client
 bs4
+googleapiclient
 numpy==1.26.4
