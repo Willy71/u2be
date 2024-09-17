@@ -25,12 +25,28 @@ credentials = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes
 gc = gspread.authorize(credentials)
 SPREADSHEET_KEY = '1NQN92mhMxhhj9CP3OfYxo_aowkI74y49sSPvStIiXn0'
 SHEET_NAME = 'youtube_videos'
+link_sheet = "https://docs.google.com/spreadsheets/d/1NQN92mhMxhhj9CP3OfYxo_aowkI74y49sSPvStIiXn0/edit?usp=sharing"
 
 # Intentar acceder a la hoja
 try:
     sheet = gc.open_by_key(SPREADSHEET_KEY).worksheet(SHEET_NAME)
 except gspread.exceptions.SpreadsheetNotFound:
     st.error(f"A planilha com a chave não foi encontrada '{SPREADSHEET_KEY}'.")
+
+def center_text_link(link_text, link_url, size, color):
+    """
+    Centers a hyperlink on the Streamlit page.
+
+    Parameters:
+    - link_text (str): The text to display as a hyperlink.
+    - link_url (str): The URL the link points to.
+    - size (str): The size of the text (HTML heading size, e.g., "1" for <h1>).
+    - color (str): The color of the text.
+    """
+    st.markdown(
+        f"<h{size} style='text-align: center; color: {color}'><a href='{link_url}' target='_blank'>{link_text}</a></h{size}>",
+        unsafe_allow_html=True
+    )
 
 # Funciones auxiliares
 def centrar_texto(texto, tamanho, color):
@@ -111,6 +127,8 @@ def main():
                 delete_video(df_video['Url'])
                 st.success("Vídeo excluído")
                 st.rerun()
+    st.text("")                    
+    center_text_link(link_sheet)
 
     # Sección para agregar videos
     with st.sidebar:
