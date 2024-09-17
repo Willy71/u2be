@@ -127,8 +127,6 @@ def main():
                 delete_video(df_video['Url'])
                 st.success("Vídeo excluído")
                 st.rerun()
-    st.text("")                    
-    center_text_link("Hoja de Google Sheets", link_sheet, "green", 1)
 
     # Sección para agregar videos
     with st.sidebar:
@@ -137,6 +135,8 @@ def main():
         
         video_url = st.text_input("URL do video de YouTube:")
         category = st.text_input("Insira a categoria do vídeo:")
+        st.text("")                    
+        center_text_link("Hoja de Google Sheets", link_sheet, "green", 1)
 
         if st.button("Adicionar vídeo"):
             if video_url and category:
