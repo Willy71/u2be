@@ -128,7 +128,7 @@ def main():
                 st.success("Vídeo excluído")
                 st.rerun()
     st.text("")                    
-    center_text_link(link_sheet)
+    center_text_link("Hoja de Google Sheets", link_sheet, "green", 3)
 
     # Sección para agregar videos
     with st.sidebar:
