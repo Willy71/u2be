@@ -135,8 +135,6 @@ def main():
         
         video_url = st.text_input("URL do video de YouTube:")
         category = st.text_input("Insira a categoria do vídeo:")
-        st.text("")                    
-        center_text_link("Hoja de Google Sheets", link_sheet, "green", 1)
 
         if st.button("Adicionar vídeo"):
             if video_url and category:
@@ -153,6 +151,8 @@ def main():
                     st.error("Insira um URL válido do YouTube.")
             else:
                 st.error("Insira um URL e uma categoria.")
+        st.text("")                    
+        center_text_link("Hoja de Google Sheets", link_sheet, "green", 1)
 
 if __name__ == "__main__":
     main()
