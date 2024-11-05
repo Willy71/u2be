@@ -12,7 +12,7 @@ st.set_page_config(page_title="You 2 be", page_icon="▶️")
 reduce_space = """
             <style type="text/css">
             div[data-testid="stAppViewBlockContainer"]{
-                padding-top:30px;
+                padding-top:10px;
             }
             </style>
             """
